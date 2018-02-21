@@ -31,17 +31,18 @@ import de.Linus122.Metrics.Metrics;
 import de.Linus122.TelegramComponents.Chat;
 import de.Linus122.TelegramComponents.ChatMessageToMc;
 
-
-public class Main extends JavaPlugin implements Listener{
+public class Main extends JavaPlugin implements Listener
+{
 	public static File datad = new File("plugins/TelegramChat/data.json");
 	public static FileConfiguration cfg;
-	
+
 	public static Data data = new Data();
 	static Plugin pl;
 	public static Telegram telegramHook;
-	
+
 	@Override
-	public void onEnable(){
+	public void onEnable()
+	{
 		this.saveDefaultConfig();
 		cfg = this.getConfig();
 		this.pl = this;
@@ -51,117 +52,159 @@ public class Main extends JavaPlugin implements Listener{
 		File dir = new File("plugins/TelegramChat/");
 		dir.mkdir();
 		data = new Data();
-		if(datad.exists()){
-			try {
+		if (datad.exists())
+		{
+			try
+			{
 				FileInputStream fin = new FileInputStream(datad);
 				ObjectInputStream ois = new ObjectInputStream(fin);
 				Gson gson = new Gson();
 				data = (Data) gson.fromJson((String) ois.readObject(), Data.class);
 				ois.close();
 				fin.close();
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		telegramHook = new Telegram();
 		telegramHook.auth(data.token);
-		
-		Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new Runnable(){
+
+		Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new Runnable()
+		{
 			boolean connectionLost = false;
-			public void run(){
-				if(connectionLost){
+
+			public void run()
+			{
+				if (connectionLost)
+				{
 					boolean success = telegramHook.reconnect();
-					if(success) connectionLost = false;
+					if (success)
+						connectionLost = false;
 				}
-				if(telegramHook.connected){
+				if (telegramHook.connected)
+				{
 					connectionLost = !telegramHook.getUpdate();
 				}
 			}
 		}, 20L, 20L);
 		new Metrics(this);
 	}
-	public static void save(){
+
+	public static void save()
+	{
 		Gson gson = new Gson();
-		
-		try {
-			FileOutputStream fout= new FileOutputStream (datad);
+
+		try
+		{
+			FileOutputStream fout = new FileOutputStream(datad);
 			ObjectOutputStream oos = new ObjectOutputStream(fout);
-			
+
 			oos.writeObject(gson.toJson(data));
 			fout.close();
 			oos.close();
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+
 	@Override
-	public void onDisable(){
+	public void onDisable()
+	{
 		save();
 	}
-	public static void sendToMC(ChatMessageToMc chatMsg) {
+
+	public static void sendToMC(ChatMessageToMc chatMsg)
+	{
 		sendToMC(chatMsg.getUuid_sender(), chatMsg.getContent(), chatMsg.getChatID_sender());
 	}
-	private static void sendToMC(UUID uuid, String msg, int sender){
+
+	private static void sendToMC(UUID uuid, String msg, int sender)
+	{
 		OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
 		List<Integer> recievers = new ArrayList<Integer>();
 		recievers.addAll(Main.data.ids);
 		recievers.remove((Object) sender);
 		String msgF = Main.cfg.getString("chat-format").replace('&', '§').replace("%player%", op.getName()).replace("%message%", msg);
-		for(int id : recievers){
+		for (int id : recievers)
+		{
 			telegramHook.sendMsg(id, msgF);
 		}
 		Bukkit.broadcastMessage(msgF.replace("&", "§"));
-	
+
 	}
-	public static void link(UUID player, int chatID){
+
+	public static void link(UUID player, int chatID)
+	{
 		Main.data.linkedChats.put(chatID, player);
 		OfflinePlayer p = Bukkit.getOfflinePlayer(player);
 		telegramHook.sendMsg(chatID, "Success! Linked " + p.getName());
 	}
-	public static String generateLinkToken(){
+
+	public static String generateLinkToken()
+	{
 		Random rnd = new Random();
 		int i = rnd.nextInt(9999999);
 		String s = i + "";
 		String finals = "";
-		for(char m : s.toCharArray()){
+		for (char m : s.toCharArray())
+		{
 			int m2 = Integer.parseInt(m + "");
 			int rndi = rnd.nextInt(2);
-			if(rndi == 0){
-				m2+=97;
+			if (rndi == 0)
+			{
+				m2 += 97;
 				char c = (char) m2;
 				finals = finals + c;
-			}else{
+			}
+			else
+			{
 				finals = finals + m;
 			}
 		}
 		return finals;
 	}
+
 	@EventHandler
-	public void onJoin(PlayerJoinEvent e){
-		if(!this.getConfig().getBoolean("enable-joinquitmessages")) return;
-		if(telegramHook.connected){
+	public void onJoin(PlayerJoinEvent e)
+	{
+		if (!this.getConfig().getBoolean("enable-joinquitmessages"))
+			return;
+		if (telegramHook.connected)
+		{
 			Chat chat = new Chat();
 			chat.parse_mode = "Markdown";
 			chat.text = "`" + e.getPlayer().getName() + " joined the game.`";
 			telegramHook.sendAll(chat);
 		}
 	}
+
 	@EventHandler
-	public void onDeath(PlayerDeathEvent e){
-		if(!this.getConfig().getBoolean("enable-deathmessages")) return;
-		if(telegramHook.connected){
+	public void onDeath(PlayerDeathEvent e)
+	{
+		if (!this.getConfig().getBoolean("enable-deathmessages"))
+			return;
+		if (telegramHook.connected)
+		{
 			Chat chat = new Chat();
 			chat.parse_mode = "Markdown";
-			chat.text = "`"+e.getDeathMessage() + "`";
+			chat.text = "`" + e.getDeathMessage() + "`";
 			telegramHook.sendAll(chat);
 		}
 	}
+
 	@EventHandler
-	public void onQuit(PlayerQuitEvent e){
-		if(!this.getConfig().getBoolean("enable-joinquitmessages")) return;
-		if(telegramHook.connected){
+	public void onQuit(PlayerQuitEvent e)
+	{
+		if (!this.getConfig().getBoolean("enable-joinquitmessages"))
+			return;
+		if (telegramHook.connected)
+		{
 			Chat chat = new Chat();
 			chat.parse_mode = "Markdown";
 			chat.text = "`" + e.getPlayer().getName() + " left the game.`";
@@ -169,17 +212,23 @@ public class Main extends JavaPlugin implements Listener{
 			telegramHook.sendAll(chat);
 		}
 	}
+
 	@EventHandler
-	public void onChat(AsyncPlayerChatEvent e){
-		if(!this.getConfig().getBoolean("enable-chatmessages")) return;
-		if(telegramHook.connected){
+	public void onChat(AsyncPlayerChatEvent e)
+	{
+		if (!this.getConfig().getBoolean("enable-chatmessages"))
+			return;
+		if (telegramHook.connected)
+		{
 			Chat chat = new Chat();
 			chat.parse_mode = "Markdown";
-			chat.text = escape(e.getPlayer().getName()) + ": " + escape(e.getMessage()).replaceAll("§.", "") ;
+			chat.text = escape(e.getPlayer().getName()) + ": " + escape(e.getMessage()).replaceAll("§.", "");
 			telegramHook.sendAll(chat);
 		}
 	}
-	public String escape(String str){
+
+	public String escape(String str)
+	{
 		return str.replace("_", "\\_");
 	}
 }

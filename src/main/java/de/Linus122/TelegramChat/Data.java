@@ -5,7 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class Data {
+public class Data
+{
 	public String token = "";
 	//Player name // ChatID
 	public HashMap<Integer, UUID> linkedChats = new HashMap<Integer, UUID>();
