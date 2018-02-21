@@ -56,7 +56,7 @@ public class Telegram
 			connected = true;
 			return true;
 		}
-		catch (Exception e)
+		catch (IOException e)
 		{
 			connected = false;
 			plugin.getLogger().warning("Sorry, but could not connect to Telegram servers. The token could be wrong.");
@@ -116,7 +116,6 @@ public class Telegram
 //										this.sendMsg(id, "Emoticons are not allowed, sorry!");
 //										return true;
 //									}
-//
 //								}
 								
 								if (text.length() == 0)
