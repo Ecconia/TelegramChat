@@ -82,7 +82,9 @@ public class Main extends JavaPlugin implements Listener
 				{
 					boolean success = telegramHook.reconnect();
 					if (success)
+					{
 						connectionLost = false;
+					}
 				}
 				if (telegramHook.connected)
 				{
@@ -174,7 +176,9 @@ public class Main extends JavaPlugin implements Listener
 	public void onJoin(PlayerJoinEvent e)
 	{
 		if (!this.getConfig().getBoolean("enable-joinquitmessages"))
+		{
 			return;
+		}
 		if (telegramHook.connected)
 		{
 			Chat chat = new Chat();
@@ -188,7 +192,9 @@ public class Main extends JavaPlugin implements Listener
 	public void onDeath(PlayerDeathEvent e)
 	{
 		if (!this.getConfig().getBoolean("enable-deathmessages"))
+		{
 			return;
+		}
 		if (telegramHook.connected)
 		{
 			Chat chat = new Chat();
@@ -202,7 +208,9 @@ public class Main extends JavaPlugin implements Listener
 	public void onQuit(PlayerQuitEvent e)
 	{
 		if (!this.getConfig().getBoolean("enable-joinquitmessages"))
+		{
 			return;
+		}
 		if (telegramHook.connected)
 		{
 			Chat chat = new Chat();
@@ -217,7 +225,9 @@ public class Main extends JavaPlugin implements Listener
 	public void onChat(AsyncPlayerChatEvent e)
 	{
 		if (!this.getConfig().getBoolean("enable-chatmessages"))
+		{
 			return;
+		}
 		if (telegramHook.connected)
 		{
 			Chat chat = new Chat();

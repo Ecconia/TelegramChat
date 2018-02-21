@@ -92,7 +92,9 @@ public class Telegram
 						{
 							int id = chat.get("id").getAsInt();
 							if (!Main.data.ids.contains(id))
+							{
 								Main.data.ids.add(id);
+							}
 
 							if (obj.getAsJsonObject("message").has("text"))
 							{
@@ -106,7 +108,9 @@ public class Telegram
 
 								}
 								if (text.length() == 0)
+								{
 									return true;
+								}
 								if (text.equals("/start"))
 								{
 									if (Main.data.firstUse)
@@ -147,7 +151,9 @@ public class Telegram
 						{
 							int id = chat.get("id").getAsInt();
 							if (!Main.data.ids.contains(id))
+							{
 								Main.data.ids.add(id);
+							}
 						}
 					}
 
