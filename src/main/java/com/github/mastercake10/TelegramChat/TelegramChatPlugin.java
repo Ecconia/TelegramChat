@@ -29,7 +29,7 @@ import com.google.gson.Gson;
 public class TelegramChatPlugin extends JavaPlugin implements Listener
 {
 	private File dataFile;
-	public static FileConfiguration config;
+	public FileConfiguration config;
 
 	public Data data = new Data();
 	public Telegram telegramHook;
@@ -135,7 +135,7 @@ public class TelegramChatPlugin extends JavaPlugin implements Listener
 		List<Integer> recievers = new ArrayList<Integer>();
 		recievers.addAll(data.ids);
 		recievers.remove((Object) sender);
-		String msgF = TelegramChatPlugin.config.getString("chat-format").replace('&', '§').replace("%player%", op.getName()).replace("%message%", msg);
+		String msgF = config.getString("chat-format").replace('&', '§').replace("%player%", op.getName()).replace("%message%", msg);
 		for (int id : recievers)
 		{
 			telegramHook.sendMsg(id, msgF);
