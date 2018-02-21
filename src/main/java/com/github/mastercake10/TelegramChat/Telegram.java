@@ -122,9 +122,9 @@ public class Telegram
 									{
 										plugin.getData().firstUse = false;
 										Chat chat2 = new Chat();
-										chat2.chat_id = id;
-										chat2.parse_mode = "Markdown";
-										chat2.text = "Congratulations, your bot is working! Have fun with this Plugin. Feel free to donate via *PayPal* to keep this project up to date! [PayPal Donation URL](http://donate.spaceio.xyz/)";
+										chat2.chatID = id;
+										chat2.parseMode = "Markdown";
+										chat2.content = "Congratulations, your bot is working! Have fun with this Plugin. Feel free to donate via *PayPal* to keep this project up to date! [PayPal Donation URL](http://donate.spaceio.xyz/)";
 										this.sendMsg(chat2);
 									}
 									this.sendMessage(id, "You can see the chat but you can't chat at the moment. Type */linktelegram ingame* to chat!");
@@ -171,8 +171,8 @@ public class Telegram
 	public void sendMessage(int id, String msg)
 	{
 		Chat chat = new Chat();
-		chat.chat_id = id;
-		chat.text = msg;
+		chat.chatID = id;
+		chat.content = msg;
 		sendMsg(chat);
 	}
 
@@ -195,7 +195,7 @@ public class Telegram
 //				Gson gson = new Gson();
 				for (int id : plugin.getData().ids)
 				{
-					chat.chat_id = id;
+					chat.chatID = id;
 //					post("sendMessage", gson.toJson(chat, Chat.class));
 					sendMsg(chat);
 				}

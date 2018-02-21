@@ -28,8 +28,8 @@ public class Listeners implements Listener
 		if (plugin.getTelegramHook().connected)
 		{
 			Chat chat = new Chat();
-			chat.parse_mode = "Markdown";
-			chat.text = "`" + e.getPlayer().getName() + " joined the game.`";
+			chat.parseMode = "Markdown";
+			chat.content = "`" + e.getPlayer().getName() + " joined the game.`";
 			plugin.getTelegramHook().sendAll(chat);
 		}
 	}
@@ -44,8 +44,8 @@ public class Listeners implements Listener
 		if (plugin.getTelegramHook().connected)
 		{
 			Chat chat = new Chat();
-			chat.parse_mode = "Markdown";
-			chat.text = "`" + e.getDeathMessage() + "`";
+			chat.parseMode = "Markdown";
+			chat.content = "`" + e.getDeathMessage() + "`";
 			plugin.getTelegramHook().sendAll(chat);
 		}
 	}
@@ -60,9 +60,9 @@ public class Listeners implements Listener
 		if (plugin.getTelegramHook().connected)
 		{
 			Chat chat = new Chat();
-			chat.parse_mode = "Markdown";
-			chat.text = "`" + e.getPlayer().getName() + " left the game.`";
-			System.out.println(chat.text);
+			chat.parseMode = "Markdown";
+			chat.content = "`" + e.getPlayer().getName() + " left the game.`";
+			System.out.println(chat.content);
 			plugin.getTelegramHook().sendAll(chat);
 		}
 	}
@@ -77,8 +77,8 @@ public class Listeners implements Listener
 		if (plugin.getTelegramHook().connected)
 		{
 			Chat chat = new Chat();
-			chat.parse_mode = "Markdown";
-			chat.text = escape(e.getPlayer().getName()) + ": " + escape(e.getMessage()).replaceAll("§.", "");
+			chat.parseMode = "Markdown";
+			chat.content = escape(e.getPlayer().getName()) + ": " + escape(e.getMessage()).replaceAll("§.", "");
 			plugin.getTelegramHook().sendAll(chat);
 		}
 	}

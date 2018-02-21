@@ -8,10 +8,14 @@ import java.util.UUID;
 public class Data
 {
 	public String token = "";
+	
 	//Player name // ChatID
 	public HashMap<Integer, UUID> linkedChats = new HashMap<Integer, UUID>();
+	
 	//Player name // RandomInt
 	public HashMap<String, UUID> linkCodes = new HashMap<String, UUID>();
+	
 	public List<Integer> ids = new ArrayList<Integer>();
+	
 	boolean firstUse = true;
 }
