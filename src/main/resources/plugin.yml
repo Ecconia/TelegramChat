@@ -8,10 +8,10 @@ description: Brings minecraft chat to Telegram!
 commands:
    telegram:
       description: Register the bot
-      usage: /<command> <token>
+      usage: '§cUsage: /<command> <token>'
       permission: telegram.settoken
 
    linktelegram:
       description: Get your chat token
-      usage: /<command>
+      usage: '§cUsage: /<command>'
       permission: telegram.linktelegram
