@@ -54,14 +54,13 @@ public class Telegram
 			authJson = sendGet("https://api.telegram.org/bot" + token + "/getMe");
 			plugin.getLogger().info("Established a connection with the telegram servers.");
 			connected = true;
-			return true;
 		}
 		catch (IOException e)
 		{
-			connected = false;
 			plugin.getLogger().warning("Sorry, but could not connect to Telegram servers. The token could be wrong.");
-			return false;
+			connected = false;
 		}
+		return connected;
 	}
 
 	public boolean getUpdate()
@@ -110,13 +109,6 @@ public class Telegram
 							if (resultObject.getAsJsonObject("message").has("text"))
 							{
 								String text = resultObject.getAsJsonObject("message").get("text").getAsString();
-//								for (char c : text.toCharArray())
-//								{
-//									if((int) c == 55357){
-//										this.sendMsg(id, "Emoticons are not allowed, sorry!");
-//										return true;
-//									}
-//								}
 								
 								if (text.length() == 0)
 								{
@@ -201,11 +193,9 @@ public class Telegram
 		{
 			public void run()
 			{
-//				Gson gson = new Gson();
 				for (int id : plugin.getData().ids)
 				{
 					chat.chat_id = id;
-//					post("sendMessage", gson.toJson(chat, Chat.class));
 					sendMsg(chat);
 				}
 			}
@@ -229,23 +219,15 @@ public class Telegram
 
 			DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(wr, "UTF-8"));
+			
 			writer.write(body);
+			
 			writer.close();
 			wr.close();
 
-			//OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-			//writer.write(body);
-			//writer.flush();
-
-//			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-//
-//			for (String line; (line = reader.readLine()) != null;)
-//			{
-//
-//			}
-
-//			writer.close();
-//			reader.close();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			while(reader.readLine() != null);
+			reader.close();
 		}
 		catch (Exception e)
 		{
