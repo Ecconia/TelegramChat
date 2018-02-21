@@ -4,25 +4,25 @@ import java.util.UUID;
 
 public class ChatMessageToMc
 {
-	UUID uuid_sender;
-	String content;
-	int chatID_sender;
+	private UUID senderUUID;
+	private String content;
+	private int senderChatID;
 
-	public ChatMessageToMc(UUID uuid_sender, String content, int chatID_sender)
+	public ChatMessageToMc(UUID senderUUID, String content, int senderChatID)
 	{
-		this.uuid_sender = uuid_sender;
+		this.senderUUID = senderUUID;
 		this.content = content;
-		this.chatID_sender = chatID_sender;
+		this.senderChatID = senderChatID;
 	}
 
-	public UUID getUuid_sender()
+	public UUID getSenderUUID()
 	{
-		return uuid_sender;
+		return senderUUID;
 	}
 
-	public void setUuid_sender(UUID uuid_sender)
+	public void setSenderUUID(UUID senderUUID)
 	{
-		this.uuid_sender = uuid_sender;
+		this.senderUUID = senderUUID;
 	}
 
 	public String getContent()
@@ -35,13 +35,13 @@ public class ChatMessageToMc
 		this.content = content;
 	}
 
-	public int getChatID_sender()
+	public int getSenderChatID()
 	{
-		return chatID_sender;
+		return senderChatID;
 	}
 
-	public void setChatID_sender(int chatID_sender)
+	public void setSenderChatID(int senderChatID)
 	{
-		this.chatID_sender = chatID_sender;
+		this.senderChatID = senderChatID;
 	}
 }

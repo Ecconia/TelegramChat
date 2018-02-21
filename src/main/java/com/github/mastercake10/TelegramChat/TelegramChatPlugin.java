@@ -38,15 +38,15 @@ public class TelegramChatPlugin extends JavaPlugin implements Listener
 	@Override
 	public void onEnable()
 	{
+		saveDefaultConfig();
+
 		dataFile = new File(getDataFolder(), "data.json");
 		data = new Data();
-
-		
-		this.saveDefaultConfig();
-		config = this.getConfig();
+		config = getConfig();
 		
 		getCommand("telegram").setExecutor(new TelegramCmd(this));
 		getCommand("linktelegram").setExecutor(new LinkTelegramCmd(this));
+		
 		getServer().getPluginManager().registerEvents(this, this);
 		
 		File dir = getDataFolder();
@@ -126,7 +126,7 @@ public class TelegramChatPlugin extends JavaPlugin implements Listener
 
 	public void sendToMC(ChatMessageToMc chatMsg)
 	{
-		sendToMC(chatMsg.getUuid_sender(), chatMsg.getContent(), chatMsg.getChatID_sender());
+		sendToMC(chatMsg.getSenderUUID(), chatMsg.getContent(), chatMsg.getSenderChatID());
 	}
 
 	private void sendToMC(UUID uuid, String msg, int sender)
