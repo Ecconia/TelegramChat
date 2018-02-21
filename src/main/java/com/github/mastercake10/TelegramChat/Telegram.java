@@ -51,16 +51,15 @@ public class Telegram
 	{
 		try
 		{
-			JsonObject obj = sendGet("https://api.telegram.org/bot" + token + "/getMe");
-			authJson = obj;
-			System.out.print("[Telegram] Established a connection with the telegram servers.");
+			authJson = sendGet("https://api.telegram.org/bot" + token + "/getMe");
+			plugin.getLogger().info("Established a connection with the telegram servers.");
 			connected = true;
 			return true;
 		}
 		catch (Exception e)
 		{
 			connected = false;
-			System.out.print("[Telegram] Sorry, but could not connect to Telegram servers. The token could be wrong.");
+			plugin.getLogger().warning("Sorry, but could not connect to Telegram servers. The token could be wrong.");
 			return false;
 		}
 	}
@@ -183,10 +182,8 @@ public class Telegram
 		{
 			actionListener.onSendToTelegram(chat);
 		}
-		Gson gson = new Gson();
 
-		post("sendMessage", gson.toJson(chat, Chat.class));
-
+		post("sendMessage", new Gson().toJson(chat, Chat.class));
 	}
 
 	public void sendAll(final Chat chat)
@@ -213,6 +210,7 @@ public class Telegram
 			String body = json;
 			URL url = new URL("https://api.telegram.org/bot" + plugin.getData().token + "/" + method);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			
 			connection.setRequestMethod("POST");
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
@@ -243,29 +241,26 @@ public class Telegram
 		catch (Exception e)
 		{
 			reconnect();
-			System.out.print("[Telegram] Disconnected from Telegram, reconnect...");
+			plugin.getLogger().warning("Disconnected from Telegram, reconnect...");
 		}
 
 	}
 
-	public JsonObject sendGet(String url) throws IOException
+	public JsonObject sendGet(String urlString) throws IOException
 	{
-		String a = url;
-		URL url2 = new URL(a);
-		URLConnection conn = url2.openConnection();
+		URL url = new URL(urlString);
+		URLConnection connection = url.openConnection();
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
-		String all = "";
+		String content = "";
 		String inputLine;
 		while ((inputLine = br.readLine()) != null)
 		{
-			all += inputLine;
+			content += inputLine;
 		}
 
 		br.close();
-		JsonParser parser = new JsonParser();
-		return parser.parse(all).getAsJsonObject();
-
+		return new JsonParser().parse(content).getAsJsonObject();
 	}
 }
