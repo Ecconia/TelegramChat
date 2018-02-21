@@ -29,10 +29,10 @@ import com.google.gson.Gson;
 public class TelegramChatPlugin extends JavaPlugin implements Listener
 {
 	private File dataFile;
-	public FileConfiguration config;
+	private FileConfiguration config;
 
-	public Data data = new Data();
-	public Telegram telegramHook;
+	private Data data;
+	private Telegram telegramHook;
 
 	@SuppressWarnings("deprecation")
 	@Override
