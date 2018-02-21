@@ -5,8 +5,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FilenameFilter;
-import java.io.IOException;
-import java.nio.file.Files;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -24,36 +23,27 @@ import com.google.gson.Gson;
  */
 public class Metrics
 {
-	private Plugin pl;
+	private Plugin plugin;
 	private final Gson gson = new Gson();
 
 	private String URL = "https://spaceio.xyz/update/%s";
 	private final String VERSION = "0.05";
 	private int REFRESH_INTERVAL = 600000;
 
-	public Metrics(Plugin pl)
+	public Metrics(Plugin plugin)
 	{
-		this.pl = pl;
+		this.plugin = plugin;
 
 		// check if Metrics are disabled (checks if file "disablemetrics" is added to the plugins's folder
-		try
+		if((new File(plugin.getDataFolder().getParentFile(), "disablemetrics")).exists())
 		{
-			Files.list(pl.getDataFolder().getParentFile().toPath()).filter(Files::isRegularFile).forEach(v -> {
-				if (v.getFileName().toString().equalsIgnoreCase("disablemetrics"))
-				{
-					return;
-				}
-			});
-		}
-		catch (IOException e1)
-		{
-			e1.printStackTrace();
+			return;
 		}
 
-		URL = String.format(URL, pl.getName());
+		URL = String.format(URL, plugin.getName());
 
 		// fetching refresh interval first
-		pl.getServer().getScheduler().runTaskLaterAsynchronously(pl, () -> {
+		plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, () -> {
 			String dataJson = collectData();
 			try
 			{
@@ -65,7 +55,7 @@ public class Metrics
 		}, 20L * 5);
 
 		// executing repeating task, our main metrics updater
-		pl.getServer().getScheduler().runTaskTimerAsynchronously(pl, () -> {
+		plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> {
 			String dataJson = collectData();
 			try
 			{
@@ -83,20 +73,22 @@ public class Metrics
 		Data data = new Data();
 
 		// collect plugin list
-		for (Plugin plug : pl.getServer().getPluginManager().getPlugins())
+		for (Plugin plug : plugin.getServer().getPluginManager().getPlugins())
+		{
 			data.plugs.put(plug.getName(), plug.getDescription().getVersion());
+		}
 
 		// fetch online players
-		data.onlinePlayers = pl.getServer().getOnlinePlayers().size();
+		data.onlinePlayers = plugin.getServer().getOnlinePlayers().size();
 
 		// server version
 		data.serverVersion = getVersion();
 
 		// plugin version
-		data.pluginVersion = pl.getDescription().getVersion();
+		data.pluginVersion = plugin.getDescription().getVersion();
 
 		// plugin author
-		data.pluginAuthors = pl.getDescription().getAuthors();
+		data.pluginAuthors = plugin.getDescription().getAuthors();
 
 		// core count
 		data.coreCnt = Runtime.getRuntime().availableProcessors();
@@ -105,14 +97,14 @@ public class Metrics
 		data.javaRuntime = System.getProperty("java.runtime.version");
 
 		// online mode
-		data.onlineMode = pl.getServer().getOnlineMode();
+		data.onlineMode = plugin.getServer().getOnlineMode();
 
 		// software information
 		data.osName = System.getProperty("os.name");
 		data.osArch = System.getProperty("os.arch");
 		data.osVersion = System.getProperty("os.version");
 
-		String executableName = new java.io.File(Metrics.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getName();
+		String executableName = new File(Metrics.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getName();
 		data.executableName = executableName;
 
 		data.diskSize = new File("/").getTotalSpace();
@@ -127,7 +119,7 @@ public class Metrics
 
 	private int sendData(String dataJson) throws Exception
 	{
-		java.net.URL obj = new java.net.URL(URL);
+		URL obj = new URL(URL);
 		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 
 		con.setRequestMethod("POST");
@@ -145,7 +137,7 @@ public class Metrics
 
 	private String getVersion()
 	{
-		String packageName = pl.getServer().getClass().getPackage().getName();
+		String packageName = plugin.getServer().getClass().getPackage().getName();
 		return packageName.substring(packageName.lastIndexOf('.') + 1);
 	}
 
