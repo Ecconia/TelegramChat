@@ -40,9 +40,6 @@ public class TelegramChatPlugin extends JavaPlugin
 		
 		getServer().getPluginManager().registerEvents(new Listeners(this), this);
 		
-		File dir = getDataFolder();
-		dir.mkdir();
-		
 		load();
 		
 		telegramHook = new Telegram(this);
