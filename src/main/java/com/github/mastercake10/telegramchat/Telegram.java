@@ -21,11 +21,11 @@ import com.google.gson.JsonParser;
 
 public class Telegram
 {
-	public JsonObject authJson;
-	public boolean connected = false;
+	private JsonObject authJson;
+	private boolean connected;
+	private String token;
 
-	static int lastUpdate = 0;
-	public String token;
+	private static int lastUpdate = 0;
 
 	private List<TelegramActionListener> listeners = new ArrayList<TelegramActionListener>();
 
@@ -271,5 +271,15 @@ public class Telegram
 
 		br.close();
 		return new JsonParser().parse(content).getAsJsonObject();
+	}
+
+	public JsonObject getAuthJson()
+	{
+		return authJson;
+	}
+	
+	public boolean isConnected()
+	{
+		return connected;
 	}
 }

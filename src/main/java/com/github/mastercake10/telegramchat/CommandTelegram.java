@@ -28,7 +28,7 @@ public class CommandTelegram implements CommandExecutor
 		if (plugin.getTelegramHook().auth(plugin.getData().token))
 		{
 			cs.sendMessage(ChatColor.GREEN + "Successfully connected to Telegram!");
-			cs.sendMessage(ChatColor.GREEN + "Add " + plugin.getTelegramHook().authJson.getAsJsonObject("result").get("username").getAsString() + " to Telegram!");
+			cs.sendMessage(ChatColor.GREEN + "Add " + plugin.getTelegramHook().getAuthJson().getAsJsonObject("result").get("username").getAsString() + " to Telegram!");
 		}
 		else
 		{

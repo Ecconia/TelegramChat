@@ -23,7 +23,7 @@ public class CommandLinkTelegram implements CommandExecutor
 			cs.sendMessage(ChatColor.RED + "Sorry, but you can't link the console currently.");
 		}
 		
-		if (plugin.getTelegramHook().authJson == null)
+		if (plugin.getTelegramHook().getAuthJson() == null)
 		{
 			cs.sendMessage(ChatColor.RED + "Please add a bot to your server first! /telegram");
 			return true;
@@ -32,7 +32,7 @@ public class CommandLinkTelegram implements CommandExecutor
 		String token = TelegramChatPlugin.generateLinkToken();
 		plugin.getData().linkCodes.put(token, ((Player) cs).getUniqueId());
 		
-		cs.sendMessage(ChatColor.GREEN + "Add " + plugin.getTelegramHook().authJson.getAsJsonObject("result").get("username").getAsString() + " to Telegram and send this message to " + plugin.getTelegramHook().authJson.getAsJsonObject("result").get("username").getAsString() + ":");
+		cs.sendMessage(ChatColor.GREEN + "Add " + plugin.getTelegramHook().getAuthJson().getAsJsonObject("result").get("username").getAsString() + " to Telegram and send this message to " + plugin.getTelegramHook().getAuthJson().getAsJsonObject("result").get("username").getAsString() + ":");
 		//TODO: Its spigot... why isn't it onclick?
 		cs.sendMessage(ChatColor.GREEN + token);
 

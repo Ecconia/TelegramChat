@@ -25,7 +25,7 @@ public class Listeners implements Listener
 		{
 			return;
 		}
-		if (plugin.getTelegramHook().connected)
+		if (plugin.getTelegramHook().isConnected())
 		{
 			Chat chat = new Chat();
 			chat.parseMode = "Markdown";
@@ -41,7 +41,7 @@ public class Listeners implements Listener
 		{
 			return;
 		}
-		if (plugin.getTelegramHook().connected)
+		if (plugin.getTelegramHook().isConnected())
 		{
 			Chat chat = new Chat();
 			chat.parseMode = "Markdown";
@@ -57,7 +57,7 @@ public class Listeners implements Listener
 		{
 			return;
 		}
-		if (plugin.getTelegramHook().connected)
+		if (plugin.getTelegramHook().isConnected())
 		{
 			Chat chat = new Chat();
 			chat.parseMode = "Markdown";
@@ -74,7 +74,7 @@ public class Listeners implements Listener
 		{
 			return;
 		}
-		if (plugin.getTelegramHook().connected)
+		if (plugin.getTelegramHook().isConnected())
 		{
 			Chat chat = new Chat();
 			chat.parseMode = "Markdown";

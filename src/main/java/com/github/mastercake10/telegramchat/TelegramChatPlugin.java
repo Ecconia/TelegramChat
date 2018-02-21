@@ -62,7 +62,7 @@ public class TelegramChatPlugin extends JavaPlugin
 						connectionLost = false;
 					}
 				}
-				if (telegramHook.connected)
+				if (telegramHook.isConnected())
 				{
 					connectionLost = !telegramHook.getUpdate();
 				}
