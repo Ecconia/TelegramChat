@@ -99,14 +99,14 @@ public class Telegram
 							if (obj.getAsJsonObject("message").has("text"))
 							{
 								String text = obj.getAsJsonObject("message").get("text").getAsString();
-								for (char c : text.toCharArray())
-								{
-									/*if((int) c == 55357){
-										this.sendMsg(id, "Emoticons are not allowed, sorry!");
-										return true;
-									}*/
-
-								}
+//								for (char c : text.toCharArray())
+//								{
+//									if((int) c == 55357){
+//										this.sendMsg(id, "Emoticons are not allowed, sorry!");
+//										return true;
+//									}
+//
+//								}
 								if (text.length() == 0)
 								{
 									return true;
@@ -189,11 +189,11 @@ public class Telegram
 		{
 			public void run()
 			{
-				Gson gson = new Gson();
+//				Gson gson = new Gson();
 				for (int id : Main.data.ids)
 				{
 					chat.chat_id = id;
-					//post("sendMessage", gson.toJson(chat, Chat.class));
+//					post("sendMessage", gson.toJson(chat, Chat.class));
 					sendMsg(chat);
 				}
 			}
@@ -224,15 +224,15 @@ public class Telegram
 			//writer.write(body);
 			//writer.flush();
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+//			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+//
+//			for (String line; (line = reader.readLine()) != null;)
+//			{
+//
+//			}
 
-			for (String line; (line = reader.readLine()) != null;)
-			{
-
-			}
-
-			writer.close();
-			reader.close();
+//			writer.close();
+//			reader.close();
 		}
 		catch (Exception e)
 		{
