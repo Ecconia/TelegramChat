@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 
 public class TelegramCmd implements CommandExecutor
 {
-
 	@Override
 	public boolean onCommand(CommandSender cs, Command arg1, String arg2, String[] args)
 	{
@@ -40,5 +39,4 @@ public class TelegramCmd implements CommandExecutor
 		}
 		return true;
 	}
-
 }

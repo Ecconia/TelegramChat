@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 
 public class LinkTelegramCmd implements CommandExecutor
 {
-
 	@Override
 	public boolean onCommand(CommandSender cs, Command arg1, String arg2, String[] args)
 	{
@@ -37,5 +36,4 @@ public class LinkTelegramCmd implements CommandExecutor
 
 		return true;
 	}
-
 }
