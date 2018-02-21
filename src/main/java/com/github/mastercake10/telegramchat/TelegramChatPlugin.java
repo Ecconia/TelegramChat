@@ -22,7 +22,7 @@ public class TelegramChatPlugin extends JavaPlugin
 {
 	private File dataFile;
 
-	private Data data;
+	private DataJSON data;
 	private Telegram telegramHook;
 
 	@Override
@@ -31,7 +31,7 @@ public class TelegramChatPlugin extends JavaPlugin
 		saveDefaultConfig();
 
 		dataFile = new File(getDataFolder(), "data.json");
-		data = new Data();
+		data = new DataJSON();
 		
 		getCommand("telegram").setExecutor(new CommandTelegram(this));
 		getCommand("linktelegram").setExecutor(new CommandLinkTelegram(this));
@@ -82,7 +82,7 @@ public class TelegramChatPlugin extends JavaPlugin
 				FileInputStream fin = new FileInputStream(dataFile);
 				ObjectInputStream ois = new ObjectInputStream(fin);
 				
-				data = (Data) new Gson().fromJson((String) ois.readObject(), Data.class);
+				data = (DataJSON) new Gson().fromJson((String) ois.readObject(), DataJSON.class);
 				
 				ois.close();
 				fin.close();
@@ -166,7 +166,7 @@ public class TelegramChatPlugin extends JavaPlugin
 		return finalToken;
 	}
 	
-	public Data getData()
+	public DataJSON getData()
 	{
 		return data;
 	}

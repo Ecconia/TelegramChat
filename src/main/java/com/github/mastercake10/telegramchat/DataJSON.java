@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class Data
+public class DataJSON
 {
 	public String token = "";
 	
