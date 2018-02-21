@@ -31,7 +31,7 @@ public class TelegramChatPlugin extends JavaPlugin implements Listener
 	private File dataFile;
 	public static FileConfiguration config;
 
-	public static Data data = new Data();
+	public Data data = new Data();
 	public static Telegram telegramHook;
 
 	@SuppressWarnings("deprecation")
@@ -45,8 +45,8 @@ public class TelegramChatPlugin extends JavaPlugin implements Listener
 		this.saveDefaultConfig();
 		config = this.getConfig();
 		
-		getCommand("telegram").setExecutor(new TelegramCmd());
-		getCommand("linktelegram").setExecutor(new LinkTelegramCmd());
+		getCommand("telegram").setExecutor(new TelegramCmd(this));
+		getCommand("linktelegram").setExecutor(new LinkTelegramCmd(this));
 		getServer().getPluginManager().registerEvents(this, this);
 		
 		File dir = getDataFolder();
@@ -54,7 +54,7 @@ public class TelegramChatPlugin extends JavaPlugin implements Listener
 		
 		load();
 		
-		telegramHook = new Telegram();
+		telegramHook = new Telegram(this);
 		telegramHook.auth(data.token);
 
 		Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new Runnable()
@@ -124,16 +124,16 @@ public class TelegramChatPlugin extends JavaPlugin implements Listener
 		}
 	}
 
-	public static void sendToMC(ChatMessageToMc chatMsg)
+	public void sendToMC(ChatMessageToMc chatMsg)
 	{
 		sendToMC(chatMsg.getUuid_sender(), chatMsg.getContent(), chatMsg.getChatID_sender());
 	}
 
-	private static void sendToMC(UUID uuid, String msg, int sender)
+	private void sendToMC(UUID uuid, String msg, int sender)
 	{
 		OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
 		List<Integer> recievers = new ArrayList<Integer>();
-		recievers.addAll(TelegramChatPlugin.data.ids);
+		recievers.addAll(data.ids);
 		recievers.remove((Object) sender);
 		String msgF = TelegramChatPlugin.config.getString("chat-format").replace('&', '§').replace("%player%", op.getName()).replace("%message%", msg);
 		for (int id : recievers)
@@ -144,9 +144,9 @@ public class TelegramChatPlugin extends JavaPlugin implements Listener
 
 	}
 
-	public static void link(UUID player, int chatID)
+	public void link(UUID player, int chatID)
 	{
-		TelegramChatPlugin.data.linkedChats.put(chatID, player);
+		data.linkedChats.put(chatID, player);
 		OfflinePlayer p = Bukkit.getOfflinePlayer(player);
 		telegramHook.sendMsg(chatID, "Success! Linked " + p.getName());
 	}
@@ -243,5 +243,15 @@ public class TelegramChatPlugin extends JavaPlugin implements Listener
 	public String escape(String str)
 	{
 		return str.replace("_", "\\_");
+	}
+	
+	public Data getData()
+	{
+		return data;
+	}
+	
+	public void resetData()
+	{
+		data = new Data();
 	}
 }

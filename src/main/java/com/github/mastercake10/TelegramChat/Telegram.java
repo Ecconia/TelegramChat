@@ -29,6 +29,13 @@ public class Telegram
 
 	private List<TelegramActionListener> listeners = new ArrayList<TelegramActionListener>();
 
+	private final TelegramChatPlugin plugin;
+	
+	public Telegram(TelegramChatPlugin plugin)
+	{
+		this.plugin = plugin;
+	}
+	
 	public void addListener(TelegramActionListener actionListener)
 	{
 		listeners.add(actionListener);
@@ -63,7 +70,7 @@ public class Telegram
 		JsonObject up = null;
 		try
 		{
-			up = sendGet("https://api.telegram.org/bot" + TelegramChatPlugin.data.token + "/getUpdates?offset=" + (lastUpdate + 1));
+			up = sendGet("https://api.telegram.org/bot" + plugin.getData().token + "/getUpdates?offset=" + (lastUpdate + 1));
 		}
 		catch (IOException e)
 		{
@@ -90,9 +97,9 @@ public class Telegram
 						if (chat.get("type").getAsString().equals("private"))
 						{
 							int id = chat.get("id").getAsInt();
-							if (!TelegramChatPlugin.data.ids.contains(id))
+							if (!plugin.getData().ids.contains(id))
 							{
-								TelegramChatPlugin.data.ids.add(id);
+								plugin.getData().ids.add(id);
 							}
 
 							if (obj.getAsJsonObject("message").has("text"))
@@ -112,9 +119,9 @@ public class Telegram
 								}
 								if (text.equals("/start"))
 								{
-									if (TelegramChatPlugin.data.firstUse)
+									if (plugin.getData().firstUse)
 									{
-										TelegramChatPlugin.data.firstUse = false;
+										plugin.getData().firstUse = false;
 										Chat chat2 = new Chat();
 										chat2.chat_id = id;
 										chat2.parse_mode = "Markdown";
@@ -123,21 +130,21 @@ public class Telegram
 									}
 									this.sendMsg(id, "You can see the chat but you can't chat at the moment. Type */linktelegram ingame* to chat!");
 								}
-								else if (TelegramChatPlugin.data.linkCodes.containsKey(text))
+								else if (plugin.getData().linkCodes.containsKey(text))
 								{
 									//LINK
-									TelegramChatPlugin.link(TelegramChatPlugin.data.linkCodes.get(text), id);
-									TelegramChatPlugin.data.linkCodes.remove(text);
+									plugin.link(plugin.getData().linkCodes.get(text), id);
+									plugin.getData().linkCodes.remove(text);
 								}
-								else if (TelegramChatPlugin.data.linkedChats.containsKey(id))
+								else if (plugin.getData().linkedChats.containsKey(id))
 								{
-									ChatMessageToMc chatMsg = new ChatMessageToMc(TelegramChatPlugin.data.linkedChats.get(id), text, id);
+									ChatMessageToMc chatMsg = new ChatMessageToMc(plugin.getData().linkedChats.get(id), text, id);
 									for (TelegramActionListener actionListener : listeners)
 									{
 										actionListener.onSendToMinecraft(chatMsg);
 									}
 
-									TelegramChatPlugin.sendToMC(chatMsg);
+									plugin.sendToMC(chatMsg);
 								}
 								else
 								{
@@ -149,9 +156,9 @@ public class Telegram
 						else if (chat.get("type").getAsString().equals("group"))
 						{
 							int id = chat.get("id").getAsInt();
-							if (!TelegramChatPlugin.data.ids.contains(id))
+							if (!plugin.getData().ids.contains(id))
 							{
-								TelegramChatPlugin.data.ids.add(id);
+								plugin.getData().ids.add(id);
 							}
 						}
 					}
@@ -189,7 +196,7 @@ public class Telegram
 			public void run()
 			{
 //				Gson gson = new Gson();
-				for (int id : TelegramChatPlugin.data.ids)
+				for (int id : plugin.getData().ids)
 				{
 					chat.chat_id = id;
 //					post("sendMessage", gson.toJson(chat, Chat.class));
@@ -204,7 +211,7 @@ public class Telegram
 		try
 		{
 			String body = json;
-			URL url = new URL("https://api.telegram.org/bot" + TelegramChatPlugin.data.token + "/" + method);
+			URL url = new URL("https://api.telegram.org/bot" + plugin.getData().token + "/" + method);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("POST");
 			connection.setDoInput(true);

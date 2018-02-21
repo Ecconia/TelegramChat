@@ -6,6 +6,13 @@ import org.bukkit.command.CommandSender;
 
 public class TelegramCmd implements CommandExecutor
 {
+	private final TelegramChatPlugin plugin;
+	
+	public TelegramCmd(TelegramChatPlugin plugin)
+	{
+		this.plugin = plugin;
+	}
+	
 	@Override
 	public boolean onCommand(CommandSender cs, Command arg1, String arg2, String[] args)
 	{
@@ -19,16 +26,14 @@ public class TelegramCmd implements CommandExecutor
 			cs.sendMessage("§c/telegram [token]");
 			return true;
 		}
-		if (TelegramChatPlugin.data == null)
+		if (plugin.getData() == null)
 		{
-			TelegramChatPlugin.data = new Data();
+			plugin.resetData();
 		}
-		TelegramChatPlugin.data.token = args[0];
-		TelegramChatPlugin.save();
-		boolean success = false;
+		plugin.getData().token = args[0];
+		plugin.save();
 
-		success = TelegramChatPlugin.telegramHook.auth(TelegramChatPlugin.data.token);
-		if (success)
+		if (TelegramChatPlugin.telegramHook.auth(plugin.getData().token))
 		{
 			cs.sendMessage("§cSuccessfully connected to Telegram!");
 			cs.sendMessage("§aAdd " + TelegramChatPlugin.telegramHook.authJson.getAsJsonObject("result").get("username").getAsString() + " to Telegram!");

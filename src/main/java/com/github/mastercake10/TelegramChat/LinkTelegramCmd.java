@@ -7,6 +7,13 @@ import org.bukkit.entity.Player;
 
 public class LinkTelegramCmd implements CommandExecutor
 {
+	private final TelegramChatPlugin plugin;
+	
+	public LinkTelegramCmd(TelegramChatPlugin plugin)
+	{
+		this.plugin = plugin;
+	}
+	
 	@Override
 	public boolean onCommand(CommandSender cs, Command arg1, String arg2, String[] args)
 	{
@@ -14,15 +21,18 @@ public class LinkTelegramCmd implements CommandExecutor
 		{
 			cs.sendMessage("§cSorry, but you can't link the console currently.");
 		}
+		
 		if (!cs.hasPermission("telegram.linktelegram"))
 		{
 			cs.sendMessage("§cYou don't have permissions to use this!");
 			return true;
 		}
-		if (TelegramChatPlugin.data == null)
+		
+		if (plugin.getData() == null)
 		{
-			TelegramChatPlugin.data = new Data();
+			plugin.resetData();
 		}
+		
 		if (TelegramChatPlugin.telegramHook.authJson == null)
 		{
 			cs.sendMessage("§cPlease add a bot to your server first! /telegram");
@@ -30,7 +40,8 @@ public class LinkTelegramCmd implements CommandExecutor
 		}
 
 		String token = TelegramChatPlugin.generateLinkToken();
-		TelegramChatPlugin.data.linkCodes.put(token, ((Player) cs).getUniqueId());
+		plugin.getData().linkCodes.put(token, ((Player) cs).getUniqueId());
+		
 		cs.sendMessage("§aAdd " + TelegramChatPlugin.telegramHook.authJson.getAsJsonObject("result").get("username").getAsString() + " to Telegram and send this message to " + TelegramChatPlugin.telegramHook.authJson.getAsJsonObject("result").get("username").getAsString() + ":");
 		cs.sendMessage("§c" + token);
 
