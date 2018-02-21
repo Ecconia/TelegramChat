@@ -7,7 +7,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import com.github.mastercake10.telegramchat.components.Chat;
+import com.github.mastercake10.telegramchat.components.ChatJSON;
 
 public class Listeners implements Listener
 {
@@ -27,9 +27,9 @@ public class Listeners implements Listener
 		}
 		if (plugin.getTelegramHook().isConnected())
 		{
-			Chat chat = new Chat();
-			chat.parseMode = "Markdown";
-			chat.content = "`" + e.getPlayer().getName() + " joined the game.`";
+			ChatJSON chat = new ChatJSON();
+			chat.parse_mode = "Markdown";
+			chat.text = "`" + e.getPlayer().getName() + " joined the game.`";
 			plugin.getTelegramHook().sendAll(chat);
 		}
 	}
@@ -43,9 +43,9 @@ public class Listeners implements Listener
 		}
 		if (plugin.getTelegramHook().isConnected())
 		{
-			Chat chat = new Chat();
-			chat.parseMode = "Markdown";
-			chat.content = "`" + e.getDeathMessage() + "`";
+			ChatJSON chat = new ChatJSON();
+			chat.parse_mode = "Markdown";
+			chat.text = "`" + e.getDeathMessage() + "`";
 			plugin.getTelegramHook().sendAll(chat);
 		}
 	}
@@ -59,10 +59,10 @@ public class Listeners implements Listener
 		}
 		if (plugin.getTelegramHook().isConnected())
 		{
-			Chat chat = new Chat();
-			chat.parseMode = "Markdown";
-			chat.content = "`" + e.getPlayer().getName() + " left the game.`";
-			System.out.println(chat.content);
+			ChatJSON chat = new ChatJSON();
+			chat.parse_mode = "Markdown";
+			chat.text = "`" + e.getPlayer().getName() + " left the game.`";
+			System.out.println(chat.text);
 			plugin.getTelegramHook().sendAll(chat);
 		}
 	}
@@ -76,9 +76,9 @@ public class Listeners implements Listener
 		}
 		if (plugin.getTelegramHook().isConnected())
 		{
-			Chat chat = new Chat();
-			chat.parseMode = "Markdown";
-			chat.content = escape(e.getPlayer().getName()) + ": " + escape(e.getMessage()).replaceAll("§.", "");
+			ChatJSON chat = new ChatJSON();
+			chat.parse_mode = "Markdown";
+			chat.text = escape(e.getPlayer().getName()) + ": " + escape(e.getMessage()).replaceAll("§.", "");
 			plugin.getTelegramHook().sendAll(chat);
 		}
 	}

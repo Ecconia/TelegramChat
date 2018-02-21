@@ -12,7 +12,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.mastercake10.telegramchat.components.Chat;
+import com.github.mastercake10.telegramchat.components.ChatJSON;
 import com.github.mastercake10.telegramchat.components.ChatMessageToMc;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -129,10 +129,10 @@ public class Telegram
 									{
 										plugin.getData().firstUse = false;
 										
-										Chat chat = new Chat();
-										chat.chatID = id;
-										chat.parseMode = "Markdown";
-										chat.content = "Congratulations, your bot is working! Have fun with this Plugin.";
+										ChatJSON chat = new ChatJSON();
+										chat.chat_id = id;
+										chat.parse_mode = "Markdown";
+										chat.text = "Congratulations, your bot is working! Have fun with this Plugin.";
 										this.sendMsg(chat);
 									}
 									
@@ -179,23 +179,23 @@ public class Telegram
 
 	public void sendMessage(int id, String msg)
 	{
-		Chat chat = new Chat();
-		chat.chatID = id;
-		chat.content = msg;
+		ChatJSON chat = new ChatJSON();
+		chat.chat_id = id;
+		chat.text = msg;
 		sendMsg(chat);
 	}
 
-	public void sendMsg(Chat chat)
+	public void sendMsg(ChatJSON chat)
 	{
 		for (TelegramActionListener actionListener : listeners)
 		{
 			actionListener.onSendToTelegram(chat);
 		}
 
-		post("sendMessage", new Gson().toJson(chat, Chat.class));
+		post("sendMessage", new Gson().toJson(chat, ChatJSON.class));
 	}
 
-	public void sendAll(final Chat chat)
+	public void sendAll(final ChatJSON chat)
 	{
 		new Thread(new Runnable()
 		{
@@ -204,7 +204,7 @@ public class Telegram
 //				Gson gson = new Gson();
 				for (int id : plugin.getData().ids)
 				{
-					chat.chatID = id;
+					chat.chat_id = id;
 //					post("sendMessage", gson.toJson(chat, Chat.class));
 					sendMsg(chat);
 				}
