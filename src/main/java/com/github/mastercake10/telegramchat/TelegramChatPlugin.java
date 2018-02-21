@@ -26,7 +26,6 @@ public class TelegramChatPlugin extends JavaPlugin
 	private Data data;
 	private Telegram telegramHook;
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable()
 	{
@@ -46,7 +45,8 @@ public class TelegramChatPlugin extends JavaPlugin
 		API.setHook(telegramHook);
 		telegramHook.auth(data.token);
 
-		Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new Runnable()
+		//TODO: enable when token set
+		getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable()
 		{
 			boolean connectionLost = false;
 
@@ -59,6 +59,7 @@ public class TelegramChatPlugin extends JavaPlugin
 						connectionLost = false;
 					}
 				}
+				
 				if (telegramHook.isConnected())
 				{
 					connectionLost = !telegramHook.getUpdate();
