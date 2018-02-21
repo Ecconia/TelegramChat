@@ -12,6 +12,7 @@ import java.util.Random;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
@@ -129,50 +130,53 @@ public class TelegramChatPlugin extends JavaPlugin implements Listener
 		sendToMC(chatMsg.getSenderUUID(), chatMsg.getContent(), chatMsg.getSenderChatID());
 	}
 
-	private void sendToMC(UUID uuid, String msg, int sender)
+	private void sendToMC(UUID playerUUID, String message, int senderID)
 	{
-		OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
-		List<Integer> recievers = new ArrayList<Integer>();
-		recievers.addAll(data.ids);
-		recievers.remove((Object) sender);
-		String msgF = config.getString("chat-format").replace('&', '§').replace("%player%", op.getName()).replace("%message%", msg);
-		for (int id : recievers)
+		OfflinePlayer offlinePlayer = getServer().getOfflinePlayer(playerUUID);
+		List<Integer> receivers = new ArrayList<Integer>();
+		receivers.addAll(data.ids);
+		receivers.remove((Object) senderID);
+
+		String msgF = config.getString("chat-format").replace('&', ChatColor.COLOR_CHAR).replace("%player%", offlinePlayer.getName()).replace("%message%", message);
+		
+		for (int id : receivers)
 		{
-			telegramHook.sendMsg(id, msgF);
+			telegramHook.sendMessage(id, msgF);
 		}
-		Bukkit.broadcastMessage(msgF.replace("&", "§"));
-
+		
+		//TODO: config to allow this??
+		getServer().broadcastMessage(msgF.replace('&', ChatColor.COLOR_CHAR));
 	}
 
-	public void link(UUID player, int chatID)
+	public void link(UUID playerUUID, int chatID)
 	{
-		data.linkedChats.put(chatID, player);
-		OfflinePlayer p = Bukkit.getOfflinePlayer(player);
-		telegramHook.sendMsg(chatID, "Success! Linked " + p.getName());
+		data.linkedChats.put(chatID, playerUUID);
+		OfflinePlayer offlinePlayer = getServer().getOfflinePlayer(playerUUID);
+		telegramHook.sendMessage(chatID, "Success! Linked " + offlinePlayer.getName());
 	}
 
+	//TODO: Resulting token looks suspicious, check usage, rewrite
 	public static String generateLinkToken()
 	{
-		Random rnd = new Random();
-		int i = rnd.nextInt(9999999);
-		String s = i + "";
-		String finals = "";
-		for (char m : s.toCharArray())
+		Random random = new Random();
+		int randomInt = random.nextInt(9999999);
+		String finalToken = "";
+		
+		for (char digitChar : String.valueOf(randomInt).toCharArray())
 		{
-			int m2 = Integer.parseInt(m + "");
-			int rndi = rnd.nextInt(2);
-			if (rndi == 0)
+			if (random.nextInt(2) == 0)
 			{
-				m2 += 97;
-				char c = (char) m2;
-				finals = finals + c;
+				int digitInt = Integer.parseInt(digitChar + "");
+				digitInt += 97;
+				finalToken += (char) digitInt;
 			}
 			else
 			{
-				finals = finals + m;
+				finalToken += digitChar;
 			}
 		}
-		return finals;
+		
+		return finalToken;
 	}
 
 	@EventHandler

@@ -128,7 +128,7 @@ public class Telegram
 										chat2.text = "Congratulations, your bot is working! Have fun with this Plugin. Feel free to donate via *PayPal* to keep this project up to date! [PayPal Donation URL](http://donate.spaceio.xyz/)";
 										this.sendMsg(chat2);
 									}
-									this.sendMsg(id, "You can see the chat but you can't chat at the moment. Type */linktelegram ingame* to chat!");
+									this.sendMessage(id, "You can see the chat but you can't chat at the moment. Type */linktelegram ingame* to chat!");
 								}
 								else if (plugin.getData().linkCodes.containsKey(text))
 								{
@@ -148,7 +148,7 @@ public class Telegram
 								}
 								else
 								{
-									this.sendMsg(id, "Sorry, please link your account with */linktelegram ingame* to use the chat!");
+									this.sendMessage(id, "Sorry, please link your account with */linktelegram ingame* to use the chat!");
 								}
 							}
 
@@ -169,7 +169,7 @@ public class Telegram
 		return true;
 	}
 
-	public void sendMsg(int id, String msg)
+	public void sendMessage(int id, String msg)
 	{
 		Chat chat = new Chat();
 		chat.chat_id = id;
