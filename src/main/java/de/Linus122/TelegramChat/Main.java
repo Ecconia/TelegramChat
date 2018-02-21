@@ -20,7 +20,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.gson.Gson;
@@ -32,23 +31,25 @@ import de.Linus122.TelegramComponents.ChatMessageToMc;
 public class Main extends JavaPlugin implements Listener
 {
 	public static File datad = new File("plugins/TelegramChat/data.json");
-	public static FileConfiguration cfg;
+	public static FileConfiguration config;
 
 	public static Data data = new Data();
-	static Plugin pl;
 	public static Telegram telegramHook;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable()
 	{
 		this.saveDefaultConfig();
-		cfg = this.getConfig();
-		this.pl = this;
-		Bukkit.getPluginCommand("telegram").setExecutor(new TelegramCmd());
-		Bukkit.getPluginCommand("linktelegram").setExecutor(new LinkTelegramCmd());
-		Bukkit.getPluginManager().registerEvents(this, this);
-		File dir = new File("plugins/TelegramChat/");
+		config = this.getConfig();
+		
+		getCommand("telegram").setExecutor(new TelegramCmd());
+		getCommand("linktelegram").setExecutor(new LinkTelegramCmd());
+		getServer().getPluginManager().registerEvents(this, this);
+		
+		File dir = getDataFolder();
 		dir.mkdir();
+		
 		data = new Data();
 		if (datad.exists())
 		{
@@ -63,10 +64,10 @@ public class Main extends JavaPlugin implements Listener
 			}
 			catch (Exception e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		
 		telegramHook = new Telegram();
 		telegramHook.auth(data.token);
 
@@ -90,6 +91,7 @@ public class Main extends JavaPlugin implements Listener
 				}
 			}
 		}, 20L, 20L);
+		
 		new Metrics(this);
 	}
 
@@ -130,7 +132,7 @@ public class Main extends JavaPlugin implements Listener
 		List<Integer> recievers = new ArrayList<Integer>();
 		recievers.addAll(Main.data.ids);
 		recievers.remove((Object) sender);
-		String msgF = Main.cfg.getString("chat-format").replace('&', '§').replace("%player%", op.getName()).replace("%message%", msg);
+		String msgF = Main.config.getString("chat-format").replace('&', '§').replace("%player%", op.getName()).replace("%message%", msg);
 		for (int id : recievers)
 		{
 			telegramHook.sendMsg(id, msgF);
