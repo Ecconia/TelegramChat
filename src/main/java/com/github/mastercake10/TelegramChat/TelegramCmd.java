@@ -33,10 +33,10 @@ public class TelegramCmd implements CommandExecutor
 		plugin.getData().token = args[0];
 		plugin.save();
 
-		if (TelegramChatPlugin.telegramHook.auth(plugin.getData().token))
+		if (plugin.getTelegramHook().auth(plugin.getData().token))
 		{
 			cs.sendMessage("§cSuccessfully connected to Telegram!");
-			cs.sendMessage("§aAdd " + TelegramChatPlugin.telegramHook.authJson.getAsJsonObject("result").get("username").getAsString() + " to Telegram!");
+			cs.sendMessage("§aAdd " + plugin.getTelegramHook().authJson.getAsJsonObject("result").get("username").getAsString() + " to Telegram!");
 		}
 		else
 		{

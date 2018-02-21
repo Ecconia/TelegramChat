@@ -32,7 +32,7 @@ public class TelegramChatPlugin extends JavaPlugin implements Listener
 	public static FileConfiguration config;
 
 	public Data data = new Data();
-	public static Telegram telegramHook;
+	public Telegram telegramHook;
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -55,6 +55,7 @@ public class TelegramChatPlugin extends JavaPlugin implements Listener
 		load();
 		
 		telegramHook = new Telegram(this);
+		API.setHook(telegramHook);
 		telegramHook.auth(data.token);
 
 		Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new Runnable()
@@ -65,8 +66,7 @@ public class TelegramChatPlugin extends JavaPlugin implements Listener
 			{
 				if (connectionLost)
 				{
-					boolean success = telegramHook.reconnect();
-					if (success)
+					if (telegramHook.reconnect())
 					{
 						connectionLost = false;
 					}
@@ -253,5 +253,10 @@ public class TelegramChatPlugin extends JavaPlugin implements Listener
 	public void resetData()
 	{
 		data = new Data();
+	}
+	
+	public Telegram getTelegramHook()
+	{
+		return telegramHook;
 	}
 }

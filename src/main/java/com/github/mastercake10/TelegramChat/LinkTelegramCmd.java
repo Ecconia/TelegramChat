@@ -33,7 +33,7 @@ public class LinkTelegramCmd implements CommandExecutor
 			plugin.resetData();
 		}
 		
-		if (TelegramChatPlugin.telegramHook.authJson == null)
+		if (plugin.getTelegramHook().authJson == null)
 		{
 			cs.sendMessage("§cPlease add a bot to your server first! /telegram");
 			return true;
@@ -42,7 +42,7 @@ public class LinkTelegramCmd implements CommandExecutor
 		String token = TelegramChatPlugin.generateLinkToken();
 		plugin.getData().linkCodes.put(token, ((Player) cs).getUniqueId());
 		
-		cs.sendMessage("§aAdd " + TelegramChatPlugin.telegramHook.authJson.getAsJsonObject("result").get("username").getAsString() + " to Telegram and send this message to " + TelegramChatPlugin.telegramHook.authJson.getAsJsonObject("result").get("username").getAsString() + ":");
+		cs.sendMessage("§aAdd " + plugin.getTelegramHook().authJson.getAsJsonObject("result").get("username").getAsString() + " to Telegram and send this message to " + plugin.getTelegramHook().authJson.getAsJsonObject("result").get("username").getAsString() + ":");
 		cs.sendMessage("§c" + token);
 
 		return true;
