@@ -19,19 +19,19 @@ public class LinkTelegramCmd implements CommandExecutor
 			cs.sendMessage("§cYou don't have permissions to use this!");
 			return true;
 		}
-		if (Main.data == null)
+		if (TelegramChatPlugin.data == null)
 		{
-			Main.data = new Data();
+			TelegramChatPlugin.data = new Data();
 		}
-		if (Main.telegramHook.authJson == null)
+		if (TelegramChatPlugin.telegramHook.authJson == null)
 		{
 			cs.sendMessage("§cPlease add a bot to your server first! /telegram");
 			return true;
 		}
 
-		String token = Main.generateLinkToken();
-		Main.data.linkCodes.put(token, ((Player) cs).getUniqueId());
-		cs.sendMessage("§aAdd " + Main.telegramHook.authJson.getAsJsonObject("result").get("username").getAsString() + " to Telegram and send this message to " + Main.telegramHook.authJson.getAsJsonObject("result").get("username").getAsString() + ":");
+		String token = TelegramChatPlugin.generateLinkToken();
+		TelegramChatPlugin.data.linkCodes.put(token, ((Player) cs).getUniqueId());
+		cs.sendMessage("§aAdd " + TelegramChatPlugin.telegramHook.authJson.getAsJsonObject("result").get("username").getAsString() + " to Telegram and send this message to " + TelegramChatPlugin.telegramHook.authJson.getAsJsonObject("result").get("username").getAsString() + ":");
 		cs.sendMessage("§c" + token);
 
 		return true;

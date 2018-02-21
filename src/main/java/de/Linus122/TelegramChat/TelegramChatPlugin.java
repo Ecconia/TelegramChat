@@ -27,7 +27,7 @@ import com.google.gson.Gson;
 import de.Linus122.TelegramComponents.Chat;
 import de.Linus122.TelegramComponents.ChatMessageToMc;
 
-public class Main extends JavaPlugin implements Listener
+public class TelegramChatPlugin extends JavaPlugin implements Listener
 {
 	private File dataFile;
 	public static FileConfiguration config;
@@ -134,9 +134,9 @@ public class Main extends JavaPlugin implements Listener
 	{
 		OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
 		List<Integer> recievers = new ArrayList<Integer>();
-		recievers.addAll(Main.data.ids);
+		recievers.addAll(TelegramChatPlugin.data.ids);
 		recievers.remove((Object) sender);
-		String msgF = Main.config.getString("chat-format").replace('&', '§').replace("%player%", op.getName()).replace("%message%", msg);
+		String msgF = TelegramChatPlugin.config.getString("chat-format").replace('&', '§').replace("%player%", op.getName()).replace("%message%", msg);
 		for (int id : recievers)
 		{
 			telegramHook.sendMsg(id, msgF);
@@ -147,7 +147,7 @@ public class Main extends JavaPlugin implements Listener
 
 	public static void link(UUID player, int chatID)
 	{
-		Main.data.linkedChats.put(chatID, player);
+		TelegramChatPlugin.data.linkedChats.put(chatID, player);
 		OfflinePlayer p = Bukkit.getOfflinePlayer(player);
 		telegramHook.sendMsg(chatID, "Success! Linked " + p.getName());
 	}

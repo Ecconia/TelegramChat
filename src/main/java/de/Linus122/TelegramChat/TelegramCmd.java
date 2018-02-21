@@ -19,19 +19,19 @@ public class TelegramCmd implements CommandExecutor
 			cs.sendMessage("§c/telegram [token]");
 			return true;
 		}
-		if (Main.data == null)
+		if (TelegramChatPlugin.data == null)
 		{
-			Main.data = new Data();
+			TelegramChatPlugin.data = new Data();
 		}
-		Main.data.token = args[0];
-		Main.save();
+		TelegramChatPlugin.data.token = args[0];
+		TelegramChatPlugin.save();
 		boolean success = false;
 
-		success = Main.telegramHook.auth(Main.data.token);
+		success = TelegramChatPlugin.telegramHook.auth(TelegramChatPlugin.data.token);
 		if (success)
 		{
 			cs.sendMessage("§cSuccessfully connected to Telegram!");
-			cs.sendMessage("§aAdd " + Main.telegramHook.authJson.getAsJsonObject("result").get("username").getAsString() + " to Telegram!");
+			cs.sendMessage("§aAdd " + TelegramChatPlugin.telegramHook.authJson.getAsJsonObject("result").get("username").getAsString() + " to Telegram!");
 		}
 		else
 		{

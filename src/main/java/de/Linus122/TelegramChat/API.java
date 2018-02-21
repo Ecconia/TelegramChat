@@ -4,6 +4,6 @@ public class API
 {
 	public static Telegram getTelegramHook()
 	{
-		return Main.telegramHook;
+		return TelegramChatPlugin.telegramHook;
 	}
 }
