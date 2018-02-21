@@ -36,7 +36,7 @@ public class TelegramChatPlugin extends JavaPlugin
 		data = new Data();
 		
 		getCommand("telegram").setExecutor(new CommandTelegram(this));
-		getCommand("linktelegram").setExecutor(new CommandLinTelegram(this));
+		getCommand("linktelegram").setExecutor(new CommandLinkTelegram(this));
 		
 		getServer().getPluginManager().registerEvents(new Listeners(this), this);
 		

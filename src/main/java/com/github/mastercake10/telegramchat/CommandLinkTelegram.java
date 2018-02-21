@@ -6,11 +6,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CommandLinTelegram implements CommandExecutor
+public class CommandLinkTelegram implements CommandExecutor
 {
 	private final TelegramChatPlugin plugin;
 	
-	public CommandLinTelegram(TelegramChatPlugin plugin)
+	public CommandLinkTelegram(TelegramChatPlugin plugin)
 	{
 		this.plugin = plugin;
 	}
