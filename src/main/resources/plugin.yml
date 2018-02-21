@@ -1,8 +1,10 @@
-name: TelegramChat
-main: de.Linus122.TelegramChat.TelegramChatPlugin
-version: ${project.version}
+name: ${artifactId}
+main: ${groupId}.${artifactId}Plugin
+version: ${version}
+
 authors: [Linus122]
 description: Brings minecraft chat to Telegram!
+
 commands:
    telegram:
       description: Main command
