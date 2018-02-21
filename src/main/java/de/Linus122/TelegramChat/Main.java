@@ -24,7 +24,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.gson.Gson;
 
-import de.Linus122.Metrics.Metrics;
 import de.Linus122.TelegramComponents.Chat;
 import de.Linus122.TelegramComponents.ChatMessageToMc;
 
@@ -91,8 +90,6 @@ public class Main extends JavaPlugin implements Listener
 				}
 			}
 		}, 20L, 20L);
-		
-		new Metrics(this);
 	}
 
 	public static void save()
