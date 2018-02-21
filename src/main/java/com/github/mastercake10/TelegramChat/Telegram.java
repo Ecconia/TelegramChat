@@ -66,44 +66,50 @@ public class Telegram
 
 	public boolean getUpdate()
 	{
-		JsonObject up = null;
+		JsonObject responseJson;
 		try
 		{
-			up = sendGet("https://api.telegram.org/bot" + plugin.getData().token + "/getUpdates?offset=" + (lastUpdate + 1));
+			responseJson = sendGet("https://api.telegram.org/bot" + plugin.getData().token + "/getUpdates?offset=" + (lastUpdate + 1));
 		}
 		catch (IOException e)
 		{
 			return false;
 		}
-		if (up == null)
+		
+		if (responseJson == null)
 		{
 			return false;
 		}
-		if (up.has("result"))
+		
+		if (responseJson.has("result"))
 		{
-			for (JsonElement ob : up.getAsJsonArray("result"))
+			for (JsonElement resultElement : responseJson.getAsJsonArray("result"))
 			{
-				if (ob.isJsonObject())
+				if (resultElement.isJsonObject())
 				{
-					JsonObject obj = (JsonObject) ob;
-					if (obj.has("update_id"))
+					JsonObject resultObject = (JsonObject) resultElement;
+					
+					if (resultObject.has("update_id"))
 					{
-						lastUpdate = obj.get("update_id").getAsInt();
+						lastUpdate = resultObject.get("update_id").getAsInt();
 					}
-					if (obj.has("message"))
+					
+					if (resultObject.has("message"))
 					{
-						JsonObject chat = obj.getAsJsonObject("message").getAsJsonObject("chat");
-						if (chat.get("type").getAsString().equals("private"))
+						JsonObject chatObject = resultObject.getAsJsonObject("message").getAsJsonObject("chat");
+						
+						if (chatObject.get("type").getAsString().equals("private"))
 						{
-							int id = chat.get("id").getAsInt();
+							int id = chatObject.get("id").getAsInt();
+							//TODO: Set
 							if (!plugin.getData().ids.contains(id))
 							{
 								plugin.getData().ids.add(id);
 							}
 
-							if (obj.getAsJsonObject("message").has("text"))
+							if (resultObject.getAsJsonObject("message").has("text"))
 							{
-								String text = obj.getAsJsonObject("message").get("text").getAsString();
+								String text = resultObject.getAsJsonObject("message").get("text").getAsString();
 //								for (char c : text.toCharArray())
 //								{
 //									if((int) c == 55357){
@@ -112,49 +118,52 @@ public class Telegram
 //									}
 //
 //								}
+								
 								if (text.length() == 0)
 								{
 									return true;
 								}
+								
 								if (text.equals("/start"))
 								{
 									if (plugin.getData().firstUse)
 									{
 										plugin.getData().firstUse = false;
-										Chat chat2 = new Chat();
-										chat2.chatID = id;
-										chat2.parseMode = "Markdown";
-										chat2.content = "Congratulations, your bot is working! Have fun with this Plugin. Feel free to donate via *PayPal* to keep this project up to date! [PayPal Donation URL](http://donate.spaceio.xyz/)";
-										this.sendMsg(chat2);
+										
+										Chat chat = new Chat();
+										chat.chatID = id;
+										chat.parseMode = "Markdown";
+										chat.content = "Congratulations, your bot is working! Have fun with this Plugin.";
+										this.sendMsg(chat);
 									}
+									
 									this.sendMessage(id, "You can see the chat but you can't chat at the moment. Type */linktelegram ingame* to chat!");
 								}
 								else if (plugin.getData().linkCodes.containsKey(text))
 								{
-									//LINK
 									plugin.link(plugin.getData().linkCodes.get(text), id);
 									plugin.getData().linkCodes.remove(text);
 								}
 								else if (plugin.getData().linkedChats.containsKey(id))
 								{
-									ChatMessageToMc chatMsg = new ChatMessageToMc(plugin.getData().linkedChats.get(id), text, id);
+									ChatMessageToMc chatMessage = new ChatMessageToMc(plugin.getData().linkedChats.get(id), text, id);
 									for (TelegramActionListener actionListener : listeners)
 									{
-										actionListener.onSendToMinecraft(chatMsg);
+										actionListener.onSendToMinecraft(chatMessage);
 									}
 
-									plugin.sendToMC(chatMsg);
+									plugin.sendToMC(chatMessage);
 								}
 								else
 								{
 									this.sendMessage(id, "Sorry, please link your account with */linktelegram ingame* to use the chat!");
 								}
 							}
-
 						}
-						else if (chat.get("type").getAsString().equals("group"))
+						else if (chatObject.get("type").getAsString().equals("group"))
 						{
-							int id = chat.get("id").getAsInt();
+							int id = chatObject.get("id").getAsInt();
+							//TODO: Set
 							if (!plugin.getData().ids.contains(id))
 							{
 								plugin.getData().ids.add(id);
@@ -165,6 +174,7 @@ public class Telegram
 				}
 			}
 		}
+		
 		return true;
 	}
 
