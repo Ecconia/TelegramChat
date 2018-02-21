@@ -1,4 +1,4 @@
-package de.Linus122.TelegramChat;
+package com.github.mastercake10.TelegramChat;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,10 +22,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.github.mastercake10.TelegramComponents.Chat;
+import com.github.mastercake10.TelegramComponents.ChatMessageToMc;
 import com.google.gson.Gson;
-
-import de.Linus122.TelegramComponents.Chat;
-import de.Linus122.TelegramComponents.ChatMessageToMc;
 
 public class TelegramChatPlugin extends JavaPlugin implements Listener
 {

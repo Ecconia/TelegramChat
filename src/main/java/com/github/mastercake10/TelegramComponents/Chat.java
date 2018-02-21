@@ -1,4 +1,4 @@
-package de.Linus122.TelegramComponents;
+package com.github.mastercake10.TelegramComponents;
 
 public class Chat
 {

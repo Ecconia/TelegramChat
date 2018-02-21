@@ -1,4 +1,4 @@
-package de.Linus122.TelegramChat;
+package com.github.mastercake10.TelegramChat;
 
 import java.util.ArrayList;
 import java.util.HashMap;

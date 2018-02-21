@@ -1,4 +1,4 @@
-package de.Linus122.TelegramChat;
+package com.github.mastercake10.TelegramChat;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
