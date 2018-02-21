@@ -14,23 +14,14 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.mastercake10.TelegramComponents.Chat;
 import com.github.mastercake10.TelegramComponents.ChatMessageToMc;
 import com.google.gson.Gson;
 
-public class TelegramChatPlugin extends JavaPlugin implements Listener
+public class TelegramChatPlugin extends JavaPlugin
 {
 	private File dataFile;
-	private FileConfiguration config;
 
 	private Data data;
 	private Telegram telegramHook;
@@ -43,12 +34,11 @@ public class TelegramChatPlugin extends JavaPlugin implements Listener
 
 		dataFile = new File(getDataFolder(), "data.json");
 		data = new Data();
-		config = getConfig();
 		
 		getCommand("telegram").setExecutor(new TelegramCmd(this));
 		getCommand("linktelegram").setExecutor(new LinkTelegramCmd(this));
 		
-		getServer().getPluginManager().registerEvents(this, this);
+		getServer().getPluginManager().registerEvents(new Listeners(this), this);
 		
 		File dir = getDataFolder();
 		dir.mkdir();
@@ -137,7 +127,7 @@ public class TelegramChatPlugin extends JavaPlugin implements Listener
 		receivers.addAll(data.ids);
 		receivers.remove((Object) senderID);
 
-		String msgF = config.getString("chat-format").replace('&', ChatColor.COLOR_CHAR).replace("%player%", offlinePlayer.getName()).replace("%message%", message);
+		String msgF = getConfig().getString("chat-format").replace('&', ChatColor.COLOR_CHAR).replace("%player%", offlinePlayer.getName()).replace("%message%", message);
 		
 		for (int id : receivers)
 		{
@@ -177,76 +167,6 @@ public class TelegramChatPlugin extends JavaPlugin implements Listener
 		}
 		
 		return finalToken;
-	}
-
-	@EventHandler
-	public void onJoin(PlayerJoinEvent e)
-	{
-		if (!this.getConfig().getBoolean("enable-joinquitmessages"))
-		{
-			return;
-		}
-		if (telegramHook.connected)
-		{
-			Chat chat = new Chat();
-			chat.parse_mode = "Markdown";
-			chat.text = "`" + e.getPlayer().getName() + " joined the game.`";
-			telegramHook.sendAll(chat);
-		}
-	}
-
-	@EventHandler
-	public void onDeath(PlayerDeathEvent e)
-	{
-		if (!this.getConfig().getBoolean("enable-deathmessages"))
-		{
-			return;
-		}
-		if (telegramHook.connected)
-		{
-			Chat chat = new Chat();
-			chat.parse_mode = "Markdown";
-			chat.text = "`" + e.getDeathMessage() + "`";
-			telegramHook.sendAll(chat);
-		}
-	}
-
-	@EventHandler
-	public void onQuit(PlayerQuitEvent e)
-	{
-		if (!this.getConfig().getBoolean("enable-joinquitmessages"))
-		{
-			return;
-		}
-		if (telegramHook.connected)
-		{
-			Chat chat = new Chat();
-			chat.parse_mode = "Markdown";
-			chat.text = "`" + e.getPlayer().getName() + " left the game.`";
-			System.out.println(chat.text);
-			telegramHook.sendAll(chat);
-		}
-	}
-
-	@EventHandler
-	public void onChat(AsyncPlayerChatEvent e)
-	{
-		if (!this.getConfig().getBoolean("enable-chatmessages"))
-		{
-			return;
-		}
-		if (telegramHook.connected)
-		{
-			Chat chat = new Chat();
-			chat.parse_mode = "Markdown";
-			chat.text = escape(e.getPlayer().getName()) + ": " + escape(e.getMessage()).replaceAll("§.", "");
-			telegramHook.sendAll(chat);
-		}
-	}
-
-	public String escape(String str)
-	{
-		return str.replace("_", "\\_");
 	}
 	
 	public Data getData()
