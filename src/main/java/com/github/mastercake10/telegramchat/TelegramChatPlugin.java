@@ -174,11 +174,6 @@ public class TelegramChatPlugin extends JavaPlugin
 		return data;
 	}
 	
-	public void resetData()
-	{
-		data = new Data();
-	}
-	
 	public Telegram getTelegramHook()
 	{
 		return telegramHook;
