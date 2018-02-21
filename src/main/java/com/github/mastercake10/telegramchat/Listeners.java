@@ -1,4 +1,4 @@
-package com.github.mastercake10.TelegramChat;
+package com.github.mastercake10.telegramchat;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -7,7 +7,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import com.github.mastercake10.TelegramComponents.Chat;
+import com.github.mastercake10.telegramchat.components.Chat;
 
 public class Listeners implements Listener
 {

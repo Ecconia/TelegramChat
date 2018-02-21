@@ -1,4 +1,4 @@
-package com.github.mastercake10.TelegramComponents;
+package com.github.mastercake10.telegramchat.components;
 
 public class Chat
 {

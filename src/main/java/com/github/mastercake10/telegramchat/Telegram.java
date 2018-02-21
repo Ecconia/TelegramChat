@@ -1,4 +1,4 @@
-package com.github.mastercake10.TelegramChat;
+package com.github.mastercake10.telegramchat;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -12,8 +12,8 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.mastercake10.TelegramComponents.Chat;
-import com.github.mastercake10.TelegramComponents.ChatMessageToMc;
+import com.github.mastercake10.telegramchat.components.Chat;
+import com.github.mastercake10.telegramchat.components.ChatMessageToMc;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

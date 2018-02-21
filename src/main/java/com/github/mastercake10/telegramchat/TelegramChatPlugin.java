@@ -1,4 +1,4 @@
-package com.github.mastercake10.TelegramChat;
+package com.github.mastercake10.telegramchat;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,7 +16,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.mastercake10.TelegramComponents.ChatMessageToMc;
+import com.github.mastercake10.telegramchat.components.ChatMessageToMc;
 import com.google.gson.Gson;
 
 public class TelegramChatPlugin extends JavaPlugin

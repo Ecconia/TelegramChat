@@ -1,4 +1,4 @@
-package com.github.mastercake10.TelegramChat;
+package com.github.mastercake10.telegramchat;
 
 public class API
 {
