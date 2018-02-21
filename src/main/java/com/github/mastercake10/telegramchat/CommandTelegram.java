@@ -17,24 +17,9 @@ public class CommandTelegram implements CommandExecutor
 	@Override
 	public boolean onCommand(CommandSender cs, Command arg1, String arg2, String[] args)
 	{
-		//TODO: Use bukkit command permission instead of this
-		if (!cs.hasPermission("telegram.settoken"))
-		{
-			cs.sendMessage(ChatColor.RED + "You don't have permissions to use this command!");
-			return true;
-		}
-		
-		//TODO: Return false
 		if (args.length != 1)
 		{
-			cs.sendMessage(ChatColor.RED + "Usage: /telegram <token>");
-			return true;
-		}
-		
-		//TODO: this won't ever happen!
-		if (plugin.getData() == null)
-		{
-			plugin.resetData();
+			return false;
 		}
 		
 		plugin.getData().token = args[0];

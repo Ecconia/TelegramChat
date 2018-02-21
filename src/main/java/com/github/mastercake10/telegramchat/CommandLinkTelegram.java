@@ -23,19 +23,6 @@ public class CommandLinkTelegram implements CommandExecutor
 			cs.sendMessage(ChatColor.RED + "Sorry, but you can't link the console currently.");
 		}
 		
-		//TODO: Bukkit command permission (false)
-		if (!cs.hasPermission("telegram.linktelegram"))
-		{
-			cs.sendMessage(ChatColor.RED + "You don't have permissions to use this!");
-			return true;
-		}
-		
-		//TODO: Useless
-		if (plugin.getData() == null)
-		{
-			plugin.resetData();
-		}
-		
 		if (plugin.getTelegramHook().authJson == null)
 		{
 			cs.sendMessage(ChatColor.RED + "Please add a bot to your server first! /telegram");
