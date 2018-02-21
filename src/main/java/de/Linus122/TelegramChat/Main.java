@@ -29,7 +29,7 @@ import de.Linus122.TelegramComponents.ChatMessageToMc;
 
 public class Main extends JavaPlugin implements Listener
 {
-	public static File datad = new File("plugins/TelegramChat/data.json");
+	private File dataFile;
 	public static FileConfiguration config;
 
 	public static Data data = new Data();
@@ -39,6 +39,10 @@ public class Main extends JavaPlugin implements Listener
 	@Override
 	public void onEnable()
 	{
+		dataFile = new File(getDataFolder(), "data.json");
+		data = new Data();
+
+		
 		this.saveDefaultConfig();
 		config = this.getConfig();
 		
@@ -49,23 +53,7 @@ public class Main extends JavaPlugin implements Listener
 		File dir = getDataFolder();
 		dir.mkdir();
 		
-		data = new Data();
-		if (datad.exists())
-		{
-			try
-			{
-				FileInputStream fin = new FileInputStream(datad);
-				ObjectInputStream ois = new ObjectInputStream(fin);
-				Gson gson = new Gson();
-				data = (Data) gson.fromJson((String) ois.readObject(), Data.class);
-				ois.close();
-				fin.close();
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
+		load();
 		
 		telegramHook = new Telegram();
 		telegramHook.auth(data.token);
@@ -92,30 +80,49 @@ public class Main extends JavaPlugin implements Listener
 		}, 20L, 20L);
 	}
 
-	public static void save()
+	@Override
+	public void onDisable()
 	{
-		Gson gson = new Gson();
+		save();
+	}
 
+	public void load()
+	{
+		if (dataFile.exists())
+		{
+			try
+			{
+				FileInputStream fin = new FileInputStream(dataFile);
+				ObjectInputStream ois = new ObjectInputStream(fin);
+				
+				data = (Data) new Gson().fromJson((String) ois.readObject(), Data.class);
+				
+				ois.close();
+				fin.close();
+			}
+			catch (Exception e)
+			{
+				getLogger().severe("Could not load data file. (IOException)");
+			}
+		}
+	}
+	
+	public void save()
+	{
 		try
 		{
-			FileOutputStream fout = new FileOutputStream(datad);
+			FileOutputStream fout = new FileOutputStream(dataFile);
 			ObjectOutputStream oos = new ObjectOutputStream(fout);
 
-			oos.writeObject(gson.toJson(data));
+			oos.writeObject(new Gson().toJson(data));
+			
 			fout.close();
 			oos.close();
 		}
 		catch (IOException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			getLogger().severe("Could not save data file. (IOException)");
 		}
-	}
-
-	@Override
-	public void onDisable()
-	{
-		save();
 	}
 
 	public static void sendToMC(ChatMessageToMc chatMsg)
