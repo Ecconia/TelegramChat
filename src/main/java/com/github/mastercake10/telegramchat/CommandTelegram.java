@@ -6,6 +6,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+//TODO: reload, status
+//TODO: oops add permission check again.
 public class CommandTelegram implements CommandExecutor
 {
 	private final TelegramChatPlugin plugin;

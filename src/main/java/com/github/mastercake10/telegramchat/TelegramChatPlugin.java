@@ -101,6 +101,7 @@ public class TelegramChatPlugin extends JavaPlugin
 		
 		for (int id : receivers)
 		{
+			//TODO: ensure correct thread.
 			telegramHook.sendMessage(id, msgF);
 		}
 		
@@ -112,6 +113,7 @@ public class TelegramChatPlugin extends JavaPlugin
 	{
 		data.linkedChats.put(chatID, playerUUID);
 		OfflinePlayer offlinePlayer = getServer().getOfflinePlayer(playerUUID);
+		//TODO: ensure correct thread.
 		telegramHook.sendMessage(chatID, "Success! Linked " + offlinePlayer.getName());
 	}
 

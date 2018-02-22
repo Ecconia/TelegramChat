@@ -41,6 +41,7 @@ public class TelegramAPI
 		
 		if(json == null)
 		{
+			//TODO: Find cause
 			throw new AnswerException("Wuuut? Json is null - what why?");
 		}
 		
