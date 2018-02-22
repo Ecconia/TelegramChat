@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.mastercake10.telegramchat.http.ConnectionException;
+import com.github.mastercake10.telegramchat.telegram.InvalidTokenException;
 import com.github.mastercake10.telegramchat.telegramapi.AnswerException;
 
 //TODO: reload, status

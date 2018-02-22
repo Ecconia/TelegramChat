@@ -1,4 +1,4 @@
-package com.github.mastercake10.telegramchat;
+package com.github.mastercake10.telegramchat.telegram;
 
 import java.util.logging.Logger;
 

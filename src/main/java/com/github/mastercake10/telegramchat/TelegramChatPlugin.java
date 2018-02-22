@@ -19,6 +19,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
+import com.github.mastercake10.telegramchat.telegram.TelegramConnector;
 import com.google.gson.Gson;
 
 public class TelegramChatPlugin extends JavaPlugin

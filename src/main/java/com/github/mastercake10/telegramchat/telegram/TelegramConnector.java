@@ -1,8 +1,10 @@
-package com.github.mastercake10.telegramchat;
+package com.github.mastercake10.telegramchat.telegram;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import com.github.mastercake10.telegramchat.ChatJSON;
+import com.github.mastercake10.telegramchat.TelegramChatPlugin;
 import com.github.mastercake10.telegramchat.http.ConnectionException;
 import com.github.mastercake10.telegramchat.telegramapi.AnswerException;
 import com.github.mastercake10.telegramchat.telegramapi.TelegramAPI;
