@@ -52,7 +52,7 @@ public class CommandTelegram implements CommandExecutor
 					return true;
 				}
 				
-				if (plugin.getTelegramHook().isRegistered())
+				if (!plugin.getTelegramHook().isRegistered())
 				{
 					sender.sendMessage(ChatColor.RED + "Please register a bot for this server first.");
 					return true;
