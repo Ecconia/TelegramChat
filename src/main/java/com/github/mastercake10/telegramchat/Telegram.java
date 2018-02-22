@@ -32,9 +32,8 @@ public class Telegram
 		this.token = token;
 	}
 	
-	public void changeToken(String token)
+	public boolean changeToken(String token)
 	{
-		name = null;
 		this.token = token;
 	}
 

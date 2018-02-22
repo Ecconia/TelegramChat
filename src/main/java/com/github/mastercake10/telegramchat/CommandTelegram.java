@@ -22,10 +22,11 @@ public class CommandTelegram implements CommandExecutor
 			return false;
 		}
 		
-		plugin.getData().token = args[0];
-		plugin.save();
+		String token = args[0];
+		
+		plugin.setToken(token);
 
-		if (plugin.getTelegramHook().auth(plugin.getData().token))
+		if (plugin.getTelegramHook().changeToken(token))
 		{
 			cs.sendMessage(ChatColor.GREEN + "Successfully connected to Telegram!");
 			cs.sendMessage(ChatColor.GREEN + "Add " + plugin.getTelegramHook().getName() + " to Telegram!");

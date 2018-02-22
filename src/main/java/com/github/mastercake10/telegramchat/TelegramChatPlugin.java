@@ -39,8 +39,7 @@ public class TelegramChatPlugin extends JavaPlugin
 		
 		load();
 		
-		telegramHook = new Telegram(this);
-		telegramHook.auth(data.token);
+		telegramHook = new Telegram(this, data.token);
 
 		//TODO: enable when token set
 		getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable()
@@ -68,6 +67,7 @@ public class TelegramChatPlugin extends JavaPlugin
 	@Override
 	public void onDisable()
 	{
+		//Required?
 		save();
 	}
 
@@ -167,5 +167,11 @@ public class TelegramChatPlugin extends JavaPlugin
 	public Telegram getTelegramHook()
 	{
 		return telegramHook;
+	}
+
+	public void setToken(String token)
+	{
+		data.token = token;
+		save();
 	}
 }
