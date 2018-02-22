@@ -40,12 +40,6 @@ public class TelegramAPI
 			throw new AnswerException(json);
 		}
 		
-		if(json == null)
-		{
-			//TODO: Find cause
-			throw new AnswerException("Wuuut? Json is null - what why?");
-		}
-		
 		if (json.has("result"))
 		{
 			for (JsonElement resultElement : json.getAsJsonArray("result"))
