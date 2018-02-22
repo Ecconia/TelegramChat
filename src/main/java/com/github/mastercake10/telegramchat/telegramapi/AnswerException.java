@@ -1,4 +1,4 @@
-package com.github.mastercake10.telegramchat.telegram;
+package com.github.mastercake10.telegramchat.telegramapi;
 
 import com.google.gson.JsonObject;
 

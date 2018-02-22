@@ -4,9 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.github.mastercake10.telegramchat.http.ConnectionException;
-import com.github.mastercake10.telegramchat.telegram.AnswerException;
-import com.github.mastercake10.telegramchat.telegram.TelegramAPI;
-import com.github.mastercake10.telegramchat.telegram.UpdateHandler;
+import com.github.mastercake10.telegramchat.telegramapi.AnswerException;
+import com.github.mastercake10.telegramchat.telegramapi.TelegramAPI;
+import com.github.mastercake10.telegramchat.telegramapi.UpdateHandler;
 import com.google.gson.Gson;
 
 public class TelegramConnector implements UpdateHandler

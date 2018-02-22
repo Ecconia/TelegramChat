@@ -1,4 +1,4 @@
-package com.github.mastercake10.telegramchat.telegram;
+package com.github.mastercake10.telegramchat.telegramapi;
 
 import com.github.mastercake10.telegramchat.http.Connection;
 import com.github.mastercake10.telegramchat.http.Result;
