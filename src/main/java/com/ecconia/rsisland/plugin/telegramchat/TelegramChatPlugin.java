@@ -82,19 +82,24 @@ public class TelegramChatPlugin extends JavaPlugin
 		
 		Set<Integer> receivers = storage.getReceiverCopy();
 		receivers.remove(senderID);
+		
+		ConfigurationSection formats = (ConfigurationSection) getConfig().get("format");
 
-		String messageFormatted = getConfig().getString("chat-format");
-		messageFormatted = messageFormatted.replace('&', ChatColor.COLOR_CHAR);
+		String messageFormatted = formats.getString("telegram", "Please add a formatting to the plugin-config.");
 		messageFormatted = messageFormatted.replace("%player%", playerName);
 		messageFormatted = messageFormatted.replace("%message%", message);
 		
 		for (int chatID : receivers)
 		{
-			//TODO: You want to sent WHAT to a telegram client? To be replaced with a different format!
 			telegramConnector.sendToChat(chatID, messageFormatted);
 		}
 		
-		//TODO: config to allow this??
+		messageFormatted = formats.getString("mc", "[TelegramChat] Please add a formatting to the plugin-config.");
+		messageFormatted = messageFormatted.replace('&', ChatColor.COLOR_CHAR);
+		messageFormatted = messageFormatted.replace("%player%", playerName);
+		messageFormatted = messageFormatted.replace("%message%", message);
+		
+		//TODO: config to allow this?? -> default no.
 		getServer().broadcastMessage(messageFormatted);//.replace('&', ChatColor.COLOR_CHAR));
 	}
 

@@ -1,4 +1,7 @@
-chat-format: '&f[&bTG&f]&7 %player%&f: %message%'
+format:
+  mc: '&f[&bTG&f]&7 %player%&f: %message%'
+  telegram: '[TG] *%player%*: %message%'
+
 messages:
   join-leave: true
   death: true
