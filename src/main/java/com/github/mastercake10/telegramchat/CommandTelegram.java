@@ -40,6 +40,12 @@ public class CommandTelegram implements CommandExecutor
 			String subcommand = args[0];
 			if("link".equals(subcommand))
 			{
+				if(!sender.hasPermission("telegram.link"))
+				{
+					sender.sendMessage(ChatColor.RED + "You do not have permission to use this subcommand.");
+					return true;
+				}
+				
 				if (!(sender instanceof Player))
 				{
 					sender.sendMessage(ChatColor.RED + "Chatting as Console is currently not supported.");
@@ -65,6 +71,12 @@ public class CommandTelegram implements CommandExecutor
 			}
 			else if("bot".equals(subcommand))
 			{
+				if(!sender.hasPermission("telegram.bot"))
+				{
+					sender.sendMessage(ChatColor.RED + "You do not have permission to use this subcommand.");
+					return true;
+				}
+				
 				if (args.length != 2)
 				{
 					sender.sendMessage(ChatColor.RED + "Usage: /telegram bot <token>");
