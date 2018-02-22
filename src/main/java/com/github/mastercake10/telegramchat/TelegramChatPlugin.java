@@ -14,7 +14,9 @@ import java.util.UUID;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import com.google.gson.Gson;
 
@@ -24,6 +26,8 @@ public class TelegramChatPlugin extends JavaPlugin
 
 	private DataJSON data;
 	private Telegram telegramHook;
+	
+	private BukkitTask timer;
 
 	@Override
 	public void onEnable()
@@ -38,20 +42,6 @@ public class TelegramChatPlugin extends JavaPlugin
 		load();
 		
 		telegramHook = new Telegram(this, data.token);
-		
-		getServer().getPluginManager().registerEvents(new Listeners(this), this);
-
-		//TODO: enable when token set
-		getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable()
-		{
-			public void run()
-			{
-				if(telegramHook.isRegistered())
-				{
-					telegramHook.update();
-				}
-			}
-		}, 20L, 60L);
 	}
 
 	@Override
@@ -171,5 +161,28 @@ public class TelegramChatPlugin extends JavaPlugin
 		String linkToken = generateLinkToken();
 		data.pendingLinkTokens.put(linkToken, player.getUniqueId());
 		return linkToken;
+	}
+
+	
+	public void disableTriggers()
+	{
+		HandlerList.unregisterAll(this);
+		getServer().getScheduler().cancelTask(timer.getTaskId());
+		timer = null;
+	}
+	
+	public void enableTriggers()
+	{
+		getServer().getPluginManager().registerEvents(new Listeners(this), this);
+		timer = getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable()
+		{
+			public void run()
+			{
+				if(telegramHook.isRegistered())
+				{
+					telegramHook.update();
+				}
+			}
+		}, 20L, 60L);
 	}
 }
