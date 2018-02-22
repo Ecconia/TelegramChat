@@ -13,10 +13,7 @@ import com.google.gson.Gson;
 
 public class TelegramConnector implements UpdateHandler
 {
-	//Bot info:
 	private String name;
-	
-	//Token for authentification:
 	private String token;
 	
 	private final TelegramChatPlugin plugin;
@@ -29,7 +26,7 @@ public class TelegramConnector implements UpdateHandler
 	private boolean updating;
 	
 	@Override
-	public void setNextUpdate(int i)
+	public void setNextID(int i)
 	{
 		updateCounter = i;
 	}
@@ -42,7 +39,7 @@ public class TelegramConnector implements UpdateHandler
 		if (chatType.equals("private"))
 		{
 			//TODO: other types, sendMessage - proper access.
-			//TODO: group support :)
+			//TODO: (super-)group support :)
 			
 			if (text != null)
 			{
@@ -161,7 +158,7 @@ public class TelegramConnector implements UpdateHandler
 		try
 		{
 			updating = true;
-			TelegramAPI.update(this, token, updateCounter+1);
+			TelegramAPI.update(this, token, updateCounter + 1);
 			sds.good("Bot is available again.");
 		}
 		catch (AnswerException e)
@@ -224,7 +221,7 @@ public class TelegramConnector implements UpdateHandler
 	{
 		//Get the token, as long as we are in the safe mainthread.
 		String mainThreadToken = token;
-		Set<Integer> ids = new HashSet<>(plugin.getIDs());
+		Set<Integer> ids = new HashSet<>(plugin.getReceivingChatIDs());
 		
 		new Thread(new Runnable()
 		{

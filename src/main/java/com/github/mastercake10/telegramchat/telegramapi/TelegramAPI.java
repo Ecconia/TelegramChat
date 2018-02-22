@@ -56,7 +56,7 @@ public class TelegramAPI
 					
 					if (resultObject.has("update_id"))
 					{
-						handler.setUpdateID(resultObject.get("update_id").getAsInt());
+						handler.setNextID(resultObject.get("update_id").getAsInt());
 					}
 					
 					handler.updateDone();

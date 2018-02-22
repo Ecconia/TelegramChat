@@ -221,7 +221,7 @@ public class TelegramChatPlugin extends JavaPlugin
 		}
 	}
 
-	public Set<Integer> getIDs()
+	public Set<Integer> getReceivingChatIDs()
 	{
 		return data.ids;
 	}
