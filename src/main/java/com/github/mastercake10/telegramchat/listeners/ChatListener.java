@@ -23,7 +23,7 @@ public class ChatListener implements Listener
 	{
 		if (!event.isCancelled())
 		{
-			Message message = new Message(escape(event.getPlayer().getName()) + ": " + escape(event.getMessage()).replaceAll(ChatColor.COLOR_CHAR + ".", ""));
+			Message message = new Message(escape("*" + event.getPlayer().getName()) + "*: " + escape(event.getMessage()).replaceAll(ChatColor.COLOR_CHAR + ".", ""));
 			plugin.getTelegramConnector().sendToAllChats(message);
 		}
 	}
