@@ -193,7 +193,7 @@ public class TelegramChatPlugin extends JavaPlugin
 				{
 					if(telegramConnector.isUpdating())
 					{
-						getLogger().warning("Skipped updating, since update still goin on.");
+//						getLogger().warning("Skipped updating, since update still goin on.");
 					}
 					else
 					{
@@ -201,7 +201,7 @@ public class TelegramChatPlugin extends JavaPlugin
 					}
 				}
 			}
-		}, 20L, 70L);
+		}, 20L, 10L);
 	}
 	
 	private void registerListeners()
