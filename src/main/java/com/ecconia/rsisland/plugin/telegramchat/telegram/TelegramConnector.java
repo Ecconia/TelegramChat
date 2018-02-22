@@ -32,7 +32,7 @@ public class TelegramConnector implements UpdateHandler
 	}
 	
 	@Override
-	public void message(String chatType, int chatID, String text)
+	public void message(int userID, String chatType, int chatID, String text)
 	{
 //		plugin.getLogger().info("Telegram message; Type:" + chatType + " ID:" + chatID + " Text:" + text);
 		
@@ -163,7 +163,7 @@ public class TelegramConnector implements UpdateHandler
 		}
 		catch (AnswerException e)
 		{
-			sds.bad("Server sent bad answer: " + e.getMessage());
+			sds.bad("Server sent negative answer: " + e.getMessage());
 		}
 		catch (ConnectionException e)
 		{
@@ -214,6 +214,19 @@ public class TelegramConnector implements UpdateHandler
 		catch (ConnectionException e)
 		{
 			sds.bad("Error connecting to TelegramAPI: " + e.getMessage());
+		}
+		catch (AnswerException e)
+		{
+			//Handle 403:"Forbidden: bot was blocked by the user"
+			if(e.getErrorCode() == 403 && e.getContent().equals("Forbidden: bot was blocked by the user"))
+			{
+				//Remove that chat from receivers:
+				plugin.getData().ids.remove(message.getChatID());
+			}
+			else
+			{
+				sds.bad("Server sent negative answer on sending message: " + e.getMessage());
+			}
 		}
 	}
 

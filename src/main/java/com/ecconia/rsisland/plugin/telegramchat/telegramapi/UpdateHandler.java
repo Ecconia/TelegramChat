@@ -4,7 +4,7 @@ public interface UpdateHandler
 {
 	void setNextID(int i);
 
-	void message(String chatType, int chatID, String text);
+	void message(int userID, String chatType, int chatID, String text);
 	
 	void updateDone();
 }

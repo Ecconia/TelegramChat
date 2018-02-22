@@ -62,19 +62,28 @@ public class TelegramAPI
 					
 					if (resultObject.has("message"))
 					{
-						JsonObject chatObject = resultObject.getAsJsonObject("message").getAsJsonObject("chat");
+						JsonObject message = resultObject.getAsJsonObject("message"); 
 						
-						//TODO: Check if groups and supergroups have the same format... lets hope they do for now.
-						String chatType = chatObject.get("type").getAsString();
-						int chatID = chatObject.get("id").getAsInt();
 						String text = null;
-						
-						if (resultObject.getAsJsonObject("message").has("text"))
+						if (message.has("text"))
 						{
-							text = resultObject.getAsJsonObject("message").get("text").getAsString();
+							text = message.get("text").getAsString();
+						}
+						else
+						{
+							//Nothing to get here
+							return;
 						}
 						
-						handler.message(chatType, chatID, text);
+						int userID = message.getAsJsonObject("from").get("id").getAsInt();
+						
+						JsonObject chat = message.getAsJsonObject("chat");
+						
+						//TODO: Check if groups and supergroups have the same format... lets hope they do for now.
+						String chatType = chat.get("type").getAsString();
+						int chatID = chat.get("id").getAsInt();
+						
+						handler.message(userID, chatType, chatID, text);
 					}
 					return;
 				}

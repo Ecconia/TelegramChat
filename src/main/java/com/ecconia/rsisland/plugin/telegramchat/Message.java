@@ -34,4 +34,9 @@ public class Message
 	{
 		this.chat_id = chatID;
 	}
+
+	public int getChatID()
+	{
+		return chat_id;
+	}
 }
