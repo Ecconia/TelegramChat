@@ -6,16 +6,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -34,6 +32,9 @@ public class TelegramChatPlugin extends JavaPlugin
 	private DataJSON data;
 	private TelegramConnector telegramConnector;
 	
+	private DataStorage storage;
+	private Map<String, UUID> pendingUserTokens;
+	
 	private BukkitTask timer;
 
 	@Override
@@ -41,6 +42,9 @@ public class TelegramChatPlugin extends JavaPlugin
 	{
 		saveDefaultConfig();
 
+		pendingUserTokens = new HashMap<>();
+		storage = new DataStorage();
+		
 		dataFile = new File(getDataFolder(), "data.json");
 		data = new DataJSON();
 		
@@ -97,33 +101,69 @@ public class TelegramChatPlugin extends JavaPlugin
 		}
 	}
 
-	public void sendToMC(UUID playerUUID, String message, int senderID)
+	public void broadcastTelegramMessage(UUID playerUUID, String message, int senderID)
 	{
-		OfflinePlayer offlinePlayer = getServer().getOfflinePlayer(playerUUID);
-		List<Integer> receivers = new ArrayList<Integer>();
-		receivers.addAll(data.ids);
-		receivers.remove((Object) senderID);
-
-		String msgF = getConfig().getString("chat-format").replace('&', ChatColor.COLOR_CHAR).replace("%player%", offlinePlayer.getName()).replace("%message%", message);
+		//TODO: Escape..
+		String playerName = getServer().getOfflinePlayer(playerUUID).getName();
 		
-		for (int id : receivers)
+		Set<Integer> receivers = storage.getReceiverCopy();
+		receivers.remove(senderID);
+
+		String messageFormatted = getConfig().getString("chat-format");
+		messageFormatted = messageFormatted.replace('&', ChatColor.COLOR_CHAR);
+		messageFormatted = messageFormatted.replace("%player%", playerName);
+		messageFormatted = messageFormatted.replace("%message%", message);
+		
+		for (int chatID : receivers)
 		{
-			//TODO: ensure correct thread.
-			telegramConnector.sendToChat(id, msgF);
+			//TODO: You want to sent WHAT to a telegram client? To be replaced with a different format!
+			telegramConnector.sendToChat(chatID, messageFormatted);
 		}
 		
 		//TODO: config to allow this??
-		getServer().broadcastMessage(msgF.replace('&', ChatColor.COLOR_CHAR));
+		getServer().broadcastMessage(messageFormatted);//.replace('&', ChatColor.COLOR_CHAR));
 	}
 
-	public void link(UUID playerUUID, int chatID)
+	public TelegramConnector getTelegramConnector()
 	{
-		data.linkedChats.put(chatID, playerUUID);
-		OfflinePlayer offlinePlayer = getServer().getOfflinePlayer(playerUUID);
-
-		telegramConnector.sendToChat(chatID, "Success! Linked " + offlinePlayer.getName());
+		return telegramConnector;
 	}
 
+	public void setToken(String token)
+	{
+		getConfig().set("token", token);
+		saveConfig();
+	}
+	
+	public Set<Integer> getReceivingChatIDs()
+	{
+		return storage.getReceiverCopy();
+	}
+	
+	//#########################################################################
+	
+	public void link(int chatID, int userID, UUID playerUUID, String token)
+	{
+		storage.addReceiver(chatID);
+		storage.addSender(userID, playerUUID);
+		
+		pendingUserTokens.remove(token);
+		
+		//TODO: Escape
+		String playername = getServer().getOfflinePlayer(playerUUID).getName();
+
+		//TODO: Change feedback message
+		telegramConnector.sendToChat(chatID, "Success! Linked " + playername);
+	}
+
+	public String getNewLinkToken(UUID playerUUID)
+	{
+		String linkToken = generateLinkToken();
+		pendingUserTokens.put(linkToken, playerUUID);
+		
+		return linkToken;
+	}
+	
 	//TODO: Resulting token looks suspicious, check usage, rewrite
 	public static String generateLinkToken()
 	{
@@ -148,35 +188,21 @@ public class TelegramChatPlugin extends JavaPlugin
 		return finalToken;
 	}
 	
-	@Deprecated
-	public DataJSON getData()
+	public UUID getToken(String token)
 	{
-		return data;
+		return pendingUserTokens.get(token);
 	}
 	
-	public TelegramConnector getTelegramConnector()
+	public UUID getSender(int userID)
 	{
-		return telegramConnector;
-	}
-
-	public void setToken(String token)
-	{
-		getConfig().set("token", token);
-		saveConfig();
+		return storage.getSender(userID);
 	}
 	
-	public String getNewLinkToken(Player player)
+	public void removeChat(int chatID)
 	{
-		String linkToken = generateLinkToken();
-		data.pendingLinkTokens.put(linkToken, player.getUniqueId());
-		return linkToken;
+		storage.removeReceiver(chatID);
 	}
-
-	public Set<Integer> getReceivingChatIDs()
-	{
-		return data.ids;
-	}
-
+	
 	//#########################################################################
 	
 	public void disableTriggers()

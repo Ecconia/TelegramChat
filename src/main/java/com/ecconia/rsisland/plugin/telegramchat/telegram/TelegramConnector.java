@@ -1,7 +1,7 @@
 package com.ecconia.rsisland.plugin.telegramchat.telegram;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import com.ecconia.rsisland.plugin.telegramchat.Message;
 import com.ecconia.rsisland.plugin.telegramchat.TelegramChatPlugin;
@@ -36,15 +36,16 @@ public class TelegramConnector implements UpdateHandler
 	{
 //		plugin.getLogger().info("Telegram message; Type:" + chatType + " ID:" + chatID + " Text:" + text);
 		
-		if (chatType.equals("private"))
-		{
+//		if (chatType.equals("private"))
+//		{
 			//TODO: other types, sendMessage - proper access.
 			//TODO: (super-)group support :)
 			
-			if (text != null)
-			{
+//			if (text != null)
+//			{
 				if (text.length() == 0)
 				{
+					plugin.getLogger().warning("Incomming text was empty.");
 					return;
 				}
 				
@@ -65,23 +66,30 @@ public class TelegramConnector implements UpdateHandler
 //					this.sendMessage(chatID, "You can see the chat but you can't chat at the moment. Type */linktelegram ingame* to chat!");
 //				}
 //				else 
-				if (plugin.getData().pendingLinkTokens.containsKey(text))
+				if (text.indexOf(' ') == -1)
 				{
-					plugin.getData().ids.add(chatID);
-					
-					plugin.link(plugin.getData().pendingLinkTokens.get(text), chatID);
-					plugin.getData().pendingLinkTokens.remove(text);
+					UUID tokenOwner = plugin.getToken(text);
+					if(tokenOwner != null)
+					{
+						plugin.link(chatID, userID, tokenOwner, text);
+
+						return;
+					}
 				}
-				else if (plugin.getData().linkedChats.containsKey(chatID))
+				
+				UUID senderUUID = plugin.getSender(userID);
+				if(senderUUID != null)
 				{
-					plugin.sendToMC(plugin.getData().linkedChats.get(chatID), text, chatID);
+					plugin.broadcastTelegramMessage(senderUUID, text, chatID);
+					return;
 				}
+				
 //				else
 //				{
 //					this.sendMessage(chatID, "Sorry, please link your account with */linktelegram ingame* to use the chat!");
 //				}
-			}
-		}
+//			}
+//		}
 //		else if (chatObject.get("type").getAsString().equals("group"))
 //		{
 //			int id = chatObject.get("id").getAsInt();
@@ -221,7 +229,7 @@ public class TelegramConnector implements UpdateHandler
 			if(e.getErrorCode() == 403 && e.getContent().equals("Forbidden: bot was blocked by the user"))
 			{
 				//Remove that chat from receivers:
-				plugin.getData().ids.remove(message.getChatID());
+				plugin.removeChat(message.getChatID());
 			}
 			else
 			{
@@ -234,7 +242,7 @@ public class TelegramConnector implements UpdateHandler
 	{
 		//Get the token, as long as we are in the safe mainthread.
 		String mainThreadToken = token;
-		Set<Integer> ids = new HashSet<>(plugin.getReceivingChatIDs());
+		Set<Integer> ids = plugin.getReceivingChatIDs();
 		
 		new Thread(new Runnable()
 		{

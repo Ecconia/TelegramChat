@@ -65,7 +65,7 @@ public class CommandTelegram implements CommandExecutor
 				
 				
 				//Get and print new token:
-				String token = plugin.getNewLinkToken((Player) sender);
+				String token = plugin.getNewLinkToken(((Player) sender).getUniqueId());
 				
 				sender.sendMessage(ChatColor.GREEN + "Add @" + plugin.getTelegramConnector().getName() + " to Telegram and send following token to it: " + token);
 				return true;
