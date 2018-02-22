@@ -22,7 +22,7 @@ public class Telegram
 	//Token for authentification:
 	private String token;
 	
-	private static int lastUpdate = 0;
+	private int lastUpdate = 0;
 
 	private final TelegramChatPlugin plugin;
 	
@@ -61,7 +61,7 @@ public class Telegram
 		JsonObject responseJson;
 		try
 		{
-			responseJson = sendGet("https://api.telegram.org/bot" + plugin.getData().token + "/getUpdates?offset=" + (lastUpdate + 1));
+			responseJson = sendGet("https://api.telegram.org/bot" + token + "/getUpdates?offset=" + (lastUpdate + 1));
 		}
 		catch (IOException e)
 		{
@@ -188,7 +188,7 @@ public class Telegram
 		try
 		{
 			String body = json;
-			URL url = new URL("https://api.telegram.org/bot" + plugin.getData().token + "/" + method);
+			URL url = new URL("https://api.telegram.org/bot" + token + "/" + method);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			
 			connection.setRequestMethod("POST");

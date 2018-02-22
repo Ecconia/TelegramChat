@@ -159,6 +159,7 @@ public class TelegramChatPlugin extends JavaPlugin
 		return finalToken;
 	}
 	
+	@Deprecated
 	public DataJSON getData()
 	{
 		return data;
