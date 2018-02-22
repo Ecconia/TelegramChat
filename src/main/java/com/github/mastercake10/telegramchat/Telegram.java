@@ -108,9 +108,12 @@ public class Telegram implements UpdateHandler
 		}
 	}
 	
-	public boolean changeToken(String token)
+	public void changeToken(String token)
 	{
-		//TODO: Disconnect properly
+		plugin.disableTriggers();
+		//Assume that at this point no call from the mainthread will be done anymore.
+		
+		
 		this.token = token;
 		boolean success = authentificate();
 		if(!success)
