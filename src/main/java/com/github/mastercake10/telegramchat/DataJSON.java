@@ -1,8 +1,8 @@
 package com.github.mastercake10.telegramchat;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class DataJSON
@@ -13,7 +13,7 @@ public class DataJSON
 	
 	public HashMap<String, UUID> pendingLinkTokens = new HashMap<String, UUID>();
 	
-	public List<Integer> ids = new ArrayList<Integer>();
+	public Set<Integer> ids = new HashSet<Integer>();
 	
 	boolean firstUse = true;
 }

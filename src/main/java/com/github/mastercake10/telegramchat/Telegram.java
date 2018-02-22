@@ -1,7 +1,7 @@
 package com.github.mastercake10.telegramchat;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.github.mastercake10.telegramchat.http.ConnectionException;
 import com.github.mastercake10.telegramchat.telegram.AnswerException;
@@ -213,7 +213,7 @@ public class Telegram implements UpdateHandler
 	{
 		//Get the token, as long as we are in the safe mainthread.
 		String mainThreadToken = token;
-		List<Integer> ids = new ArrayList<>(plugin.getIDs());
+		Set<Integer> ids = new HashSet<>(plugin.getIDs());
 		
 		new Thread(new Runnable()
 		{

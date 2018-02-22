@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.ChatColor;
@@ -191,7 +192,7 @@ public class TelegramChatPlugin extends JavaPlugin
 		}, 20L, 70L);
 	}
 
-	public List<Integer> getIDs()
+	public Set<Integer> getIDs()
 	{
 		return data.ids;
 	}
