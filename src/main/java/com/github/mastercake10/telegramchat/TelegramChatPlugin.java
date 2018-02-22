@@ -35,11 +35,11 @@ public class TelegramChatPlugin extends JavaPlugin
 		
 		getCommand("telegram").setExecutor(new CommandTelegram(this));
 		
-		getServer().getPluginManager().registerEvents(new Listeners(this), this);
-		
 		load();
 		
 		telegramHook = new Telegram(this, data.token);
+		
+		getServer().getPluginManager().registerEvents(new Listeners(this), this);
 
 		//TODO: enable when token set
 		getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable()
