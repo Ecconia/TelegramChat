@@ -30,6 +30,7 @@ public class TelegramChatPlugin extends JavaPlugin
 {
 	private File dataFile;
 
+	@Deprecated
 	private DataJSON data;
 	private TelegramConnector telegramConnector;
 	
@@ -47,7 +48,7 @@ public class TelegramChatPlugin extends JavaPlugin
 		
 		load();
 		
-		telegramConnector = new TelegramConnector(this, data.token);
+		telegramConnector = new TelegramConnector(this, getConfig().getString("token"));
 	}
 
 	@Override
@@ -160,8 +161,8 @@ public class TelegramChatPlugin extends JavaPlugin
 
 	public void setToken(String token)
 	{
-		data.token = token;
-		save();
+		getConfig().set("token", token);
+		saveConfig();
 	}
 	
 	public String getNewLinkToken(Player player)
