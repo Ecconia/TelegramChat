@@ -2,16 +2,11 @@ name: ${artifactId}
 main: ${groupId}.${artifactId}Plugin
 version: ${version}
 
-authors: [Linus122]
-description: Brings minecraft chat to Telegram!
+authors: [Linus122, Ecconia]
+description: Connect Telegram with your server chat!
 
 commands:
    telegram:
-      description: Register the bot
-      usage: '§cUsage: /<command> <token>'
-      permission: telegram.settoken
-
-   linktelegram:
-      description: Get your chat token
-      usage: '§cUsage: /<command>'
-      permission: telegram.linktelegram
+      description: Register the bot or link your account
+      usage: '§cUsage: /<command> <bot|link>'
+      permission: telegram.setbot;telegram.link
