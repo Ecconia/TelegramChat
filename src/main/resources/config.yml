@@ -1,4 +1,5 @@
 chat-format: '&f[&bTG&f]&7 %player%&f: %message%'
-enable-joinquitmessages: true
-enable-deathmessages: true
-enable-chatmessages: true
+messages:
+  join-leave: true
+  death: true
+  chat: true

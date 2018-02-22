@@ -14,11 +14,15 @@ import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
+import com.github.mastercake10.telegramchat.listeners.ChatListener;
+import com.github.mastercake10.telegramchat.listeners.DeathListener;
+import com.github.mastercake10.telegramchat.listeners.JoinLeaveListener;
 import com.github.mastercake10.telegramchat.telegram.TelegramConnector;
 import com.google.gson.Gson;
 
@@ -180,7 +184,7 @@ public class TelegramChatPlugin extends JavaPlugin
 	
 	public void enableTriggers()
 	{
-		getServer().getPluginManager().registerEvents(new Listeners(this), this);
+		registerListeners();
 		timer = getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable()
 		{
 			public void run()
@@ -198,6 +202,23 @@ public class TelegramChatPlugin extends JavaPlugin
 				}
 			}
 		}, 20L, 70L);
+	}
+	
+	private void registerListeners()
+	{
+		ConfigurationSection messages = (ConfigurationSection) getConfig().get("messages");
+		if (messages.getBoolean("chat"))
+		{
+			getServer().getPluginManager().registerEvents(new ChatListener(this), this);
+		}
+		if (messages.getBoolean("death"))
+		{
+			getServer().getPluginManager().registerEvents(new DeathListener(this), this);
+		}
+		if (messages.getBoolean("join-leave"))
+		{
+			getServer().getPluginManager().registerEvents(new JoinLeaveListener(this), this);
+		}
 	}
 
 	public Set<Integer> getIDs()
