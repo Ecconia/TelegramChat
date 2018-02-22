@@ -60,6 +60,7 @@ public class Listeners implements Listener
 			ChatJSON chat = new ChatJSON();
 			chat.parse_mode = "Markdown";
 			chat.text = "`" + e.getPlayer().getName() + " left the game.`";
+			//TODO: to be removed...
 			System.out.println(chat.text);
 			plugin.getTelegramHook().sendAll(chat);
 		}

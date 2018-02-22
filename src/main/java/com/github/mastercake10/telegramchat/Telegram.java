@@ -234,6 +234,12 @@ public class Telegram
 		br.close();
 		return new JsonParser().parse(content).getAsJsonObject();
 	}
+	
+	public boolean isConnected()
+	{
+		//TODO: ehm nope...
+		return true;
+	}
 
 	public boolean isRegistered()
 	{

@@ -67,7 +67,7 @@ public class TelegramChatPlugin extends JavaPlugin
 	@Override
 	public void onDisable()
 	{
-		//Required?
+		//TODO: Required?
 		save();
 	}
 
