@@ -1,4 +1,4 @@
-package com.github.mastercake10.telegramchat;
+package com.ecconia.rsisland.plugin.telegramchat;
 
 @SuppressWarnings("unused")
 public class Message

@@ -1,13 +1,13 @@
-package com.github.mastercake10.telegramchat.listeners;
+package com.ecconia.rsisland.plugin.telegramchat.listeners;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
-import com.github.mastercake10.telegramchat.FormattedMessage;
-import com.github.mastercake10.telegramchat.Message;
-import com.github.mastercake10.telegramchat.TelegramChatPlugin;
+import com.ecconia.rsisland.plugin.telegramchat.FormattedMessage;
+import com.ecconia.rsisland.plugin.telegramchat.Message;
+import com.ecconia.rsisland.plugin.telegramchat.TelegramChatPlugin;
 
 public class DeathListener implements Listener
 {

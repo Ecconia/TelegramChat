@@ -1,14 +1,14 @@
-package com.github.mastercake10.telegramchat.telegram;
+package com.ecconia.rsisland.plugin.telegramchat.telegram;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import com.github.mastercake10.telegramchat.Message;
-import com.github.mastercake10.telegramchat.TelegramChatPlugin;
-import com.github.mastercake10.telegramchat.http.ConnectionException;
-import com.github.mastercake10.telegramchat.telegramapi.AnswerException;
-import com.github.mastercake10.telegramchat.telegramapi.TelegramAPI;
-import com.github.mastercake10.telegramchat.telegramapi.UpdateHandler;
+import com.ecconia.rsisland.plugin.telegramchat.Message;
+import com.ecconia.rsisland.plugin.telegramchat.TelegramChatPlugin;
+import com.ecconia.rsisland.plugin.telegramchat.http.ConnectionException;
+import com.ecconia.rsisland.plugin.telegramchat.telegramapi.AnswerException;
+import com.ecconia.rsisland.plugin.telegramchat.telegramapi.TelegramAPI;
+import com.ecconia.rsisland.plugin.telegramchat.telegramapi.UpdateHandler;
 import com.google.gson.Gson;
 
 public class TelegramConnector implements UpdateHandler

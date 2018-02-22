@@ -1,4 +1,4 @@
-package com.github.mastercake10.telegramchat;
+package com.ecconia.rsisland.plugin.telegramchat;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -6,9 +6,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.mastercake10.telegramchat.http.ConnectionException;
-import com.github.mastercake10.telegramchat.telegram.InvalidTokenException;
-import com.github.mastercake10.telegramchat.telegramapi.AnswerException;
+import com.ecconia.rsisland.plugin.telegramchat.http.ConnectionException;
+import com.ecconia.rsisland.plugin.telegramchat.telegram.InvalidTokenException;
+import com.ecconia.rsisland.plugin.telegramchat.telegramapi.AnswerException;
 
 //TODO: reload, status
 //TODO: oops add permission check again.

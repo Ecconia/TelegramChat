@@ -1,4 +1,4 @@
-package com.github.mastercake10.telegramchat.telegram;
+package com.ecconia.rsisland.plugin.telegramchat.telegram;
 
 @SuppressWarnings("serial")
 public class InvalidTokenException extends RuntimeException

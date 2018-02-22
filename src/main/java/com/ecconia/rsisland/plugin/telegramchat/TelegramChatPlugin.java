@@ -1,4 +1,4 @@
-package com.github.mastercake10.telegramchat;
+package com.ecconia.rsisland.plugin.telegramchat;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,10 +20,10 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.github.mastercake10.telegramchat.listeners.ChatListener;
-import com.github.mastercake10.telegramchat.listeners.DeathListener;
-import com.github.mastercake10.telegramchat.listeners.JoinLeaveListener;
-import com.github.mastercake10.telegramchat.telegram.TelegramConnector;
+import com.ecconia.rsisland.plugin.telegramchat.listeners.ChatListener;
+import com.ecconia.rsisland.plugin.telegramchat.listeners.DeathListener;
+import com.ecconia.rsisland.plugin.telegramchat.listeners.JoinLeaveListener;
+import com.ecconia.rsisland.plugin.telegramchat.telegram.TelegramConnector;
 import com.google.gson.Gson;
 
 public class TelegramChatPlugin extends JavaPlugin

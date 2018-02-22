@@ -1,4 +1,4 @@
-package com.github.mastercake10.telegramchat.http;
+package com.ecconia.rsisland.plugin.telegramchat.http;
 
 @SuppressWarnings("serial")
 public class ConnectionException extends RuntimeException

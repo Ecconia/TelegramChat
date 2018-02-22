@@ -1,4 +1,4 @@
-package com.github.mastercake10.telegramchat;
+package com.ecconia.rsisland.plugin.telegramchat;
 
 import java.util.HashMap;
 import java.util.HashSet;

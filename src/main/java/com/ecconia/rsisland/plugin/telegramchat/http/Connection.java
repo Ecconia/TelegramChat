@@ -1,4 +1,4 @@
-package com.github.mastercake10.telegramchat.http;
+package com.ecconia.rsisland.plugin.telegramchat.http;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

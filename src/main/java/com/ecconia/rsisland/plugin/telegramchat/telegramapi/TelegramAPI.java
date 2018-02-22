@@ -1,7 +1,7 @@
-package com.github.mastercake10.telegramchat.telegramapi;
+package com.ecconia.rsisland.plugin.telegramchat.telegramapi;
 
-import com.github.mastercake10.telegramchat.http.Connection;
-import com.github.mastercake10.telegramchat.http.Result;
+import com.ecconia.rsisland.plugin.telegramchat.http.Connection;
+import com.ecconia.rsisland.plugin.telegramchat.http.Result;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

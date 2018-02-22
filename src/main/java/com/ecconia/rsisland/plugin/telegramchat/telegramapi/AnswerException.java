@@ -1,4 +1,4 @@
-package com.github.mastercake10.telegramchat.telegramapi;
+package com.ecconia.rsisland.plugin.telegramchat.telegramapi;
 
 import com.google.gson.JsonObject;
 
