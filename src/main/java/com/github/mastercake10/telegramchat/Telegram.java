@@ -33,55 +33,54 @@ public class Telegram implements UpdateHandler
 	@Override
 	public void message(String chatType, int chatID, String text)
 	{
-		plugin.getLogger().info("Telegram message; Type:" + chatType + " ID:" + chatID + " Text:" + text);
-//		if (chatObject.get("type").getAsString().equals("private"))
-//		{
-//			int id = chatObject.get("id").getAsInt();
-//			//TODO: Set
-//			if (!plugin.getData().ids.contains(id))
-//			{
-//				plugin.getData().ids.add(id);
-//			}
-//
-//			if (resultObject.getAsJsonObject("message").has("text"))
-//			{
-//				String text = resultObject.getAsJsonObject("message").get("text").getAsString();
-//				
-//				if (text.length() == 0)
-//				{
-//					return true;
-//				}
-//				
+//		plugin.getLogger().info("Telegram message; Type:" + chatType + " ID:" + chatID + " Text:" + text);
+		
+		if (chatType.equals("private"))
+		{
+			//TODO: other types, sendMessage - proper access.
+			//TODO: group support :)
+			
+			if (text != null)
+			{
+				if (text.length() == 0)
+				{
+					return;
+				}
+				
 //				if (text.equals("/start"))
 //				{
+//					For whom??
 //					if (plugin.getData().firstUse)
 //					{
 //						plugin.getData().firstUse = false;
 //						
 //						ChatJSON chat = new ChatJSON();
-//						chat.chat_id = id;
+//						chat.chat_id = chatID;
 //						chat.parse_mode = "Markdown";
 //						chat.text = "Congratulations, your bot is working! Have fun with this Plugin.";
-//						this.sendMsg(chat);
+//						sendMessage(chat);
 //					}
 //					
-//					this.sendMessage(id, "You can see the chat but you can't chat at the moment. Type */linktelegram ingame* to chat!");
+//					this.sendMessage(chatID, "You can see the chat but you can't chat at the moment. Type */linktelegram ingame* to chat!");
 //				}
-//				else if (plugin.getData().pendingLinkTokens.containsKey(text))
-//				{
-//					plugin.link(plugin.getData().pendingLinkTokens.get(text), id);
-//					plugin.getData().pendingLinkTokens.remove(text);
-//				}
-//				else if (plugin.getData().linkedChats.containsKey(id))
-//				{
-//					plugin.sendToMC(plugin.getData().linkedChats.get(id), text, id);
-//				}
+//				else 
+				if (plugin.getData().pendingLinkTokens.containsKey(text))
+				{
+					plugin.getData().ids.add(chatID);
+					
+					plugin.link(plugin.getData().pendingLinkTokens.get(text), chatID);
+					plugin.getData().pendingLinkTokens.remove(text);
+				}
+				else if (plugin.getData().linkedChats.containsKey(chatID))
+				{
+					plugin.sendToMC(plugin.getData().linkedChats.get(chatID), text, chatID);
+				}
 //				else
 //				{
-//					this.sendMessage(id, "Sorry, please link your account with */linktelegram ingame* to use the chat!");
+//					this.sendMessage(chatID, "Sorry, please link your account with */linktelegram ingame* to use the chat!");
 //				}
-//			}
-//		}
+			}
+		}
 //		else if (chatObject.get("type").getAsString().equals("group"))
 //		{
 //			int id = chatObject.get("id").getAsInt();
@@ -95,6 +94,7 @@ public class Telegram implements UpdateHandler
 	
 	//#########################################################################
 	
+	//TODO: authentification should be threaded!
 	public Telegram(TelegramChatPlugin plugin, String token)
 	{
 		this.plugin = plugin;
@@ -126,6 +126,8 @@ public class Telegram implements UpdateHandler
 		plugin.disableTriggers();
 		
 		this.token = token;
+		name = null;
+		
 		authentificate();
 
 		sds.setState(true);
