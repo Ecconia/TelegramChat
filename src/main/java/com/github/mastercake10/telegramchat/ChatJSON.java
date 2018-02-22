@@ -1,4 +1,4 @@
-package com.github.mastercake10.telegramchat.components;
+package com.github.mastercake10.telegramchat;
 
 public class ChatJSON
 {
