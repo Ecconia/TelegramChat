@@ -1,0 +1,11 @@
+# Eclipse files:
+
+target/
+.project
+.settings/
+.classpath
+/bin/
+
+# Private
+
+compile.sh
