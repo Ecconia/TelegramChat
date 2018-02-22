@@ -1,24 +1,14 @@
 package com.github.mastercake10.telegramchat;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-
+import com.github.mastercake10.telegramchat.telegram.TelegramAPI;
+import com.github.mastercake10.telegramchat.telegram.UpdateHandler;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
-public class Telegram
+public class Telegram implements UpdateHandler
 {
 	//Bot info:
 	private String name;
+	
 	//Token for authentification:
 	private String token;
 	
@@ -29,9 +19,82 @@ public class Telegram
 	//TODO: Sync or so
 	private boolean healthyConnection = true;
 	
-	private int lastUpdate = 0;
-
 	private final TelegramChatPlugin plugin;
+	
+	//#########################################################################
+	
+	private int updateCounter = 0;
+	
+	@Override
+	public void setNextUpdate(int i)
+	{
+		updateCounter = i;
+	}
+	
+	@Override
+	public void message(String chatType, int chatID, String text)
+	{
+		plugin.getLogger().info("Telegram message; Type:" + chatType + " ID:" + chatID + " Text:" + text);
+//		if (chatObject.get("type").getAsString().equals("private"))
+//		{
+//			int id = chatObject.get("id").getAsInt();
+//			//TODO: Set
+//			if (!plugin.getData().ids.contains(id))
+//			{
+//				plugin.getData().ids.add(id);
+//			}
+//
+//			if (resultObject.getAsJsonObject("message").has("text"))
+//			{
+//				String text = resultObject.getAsJsonObject("message").get("text").getAsString();
+//				
+//				if (text.length() == 0)
+//				{
+//					return true;
+//				}
+//				
+//				if (text.equals("/start"))
+//				{
+//					if (plugin.getData().firstUse)
+//					{
+//						plugin.getData().firstUse = false;
+//						
+//						ChatJSON chat = new ChatJSON();
+//						chat.chat_id = id;
+//						chat.parse_mode = "Markdown";
+//						chat.text = "Congratulations, your bot is working! Have fun with this Plugin.";
+//						this.sendMsg(chat);
+//					}
+//					
+//					this.sendMessage(id, "You can see the chat but you can't chat at the moment. Type */linktelegram ingame* to chat!");
+//				}
+//				else if (plugin.getData().pendingLinkTokens.containsKey(text))
+//				{
+//					plugin.link(plugin.getData().pendingLinkTokens.get(text), id);
+//					plugin.getData().pendingLinkTokens.remove(text);
+//				}
+//				else if (plugin.getData().linkedChats.containsKey(id))
+//				{
+//					plugin.sendToMC(plugin.getData().linkedChats.get(id), text, id);
+//				}
+//				else
+//				{
+//					this.sendMessage(id, "Sorry, please link your account with */linktelegram ingame* to use the chat!");
+//				}
+//			}
+//		}
+//		else if (chatObject.get("type").getAsString().equals("group"))
+//		{
+//			int id = chatObject.get("id").getAsInt();
+//			//TODO: Set
+//			if (!plugin.getData().ids.contains(id))
+//			{
+//				plugin.getData().ids.add(id);
+//			}
+//		}
+	}
+	
+	//#########################################################################
 	
 	public Telegram(TelegramChatPlugin plugin, String token)
 	{
@@ -63,117 +126,30 @@ public class Telegram
 	}
 
 	//Should only be called once, to register the bot (not every second)
-	private boolean authentificate()
+	private void authentificate()
 	{
-		try
+		//TODO: Catch special exception
+		if(token != null && token.matches("[0-9]+:[A-Za-z0-9]+"))
 		{
-			JsonObject authJson = sendGet("https://api.telegram.org/bot" + token + "/getMe");
-			name = authJson.getAsJsonObject("result").get("username").getAsString();
-			
+			plugin.getLogger().info("Token: >" + token + "<");
+			name = TelegramAPI.login(token);
 			plugin.getLogger().info(name + " login successfully.");
-			return true;
 		}
-		catch (IOException e)
+		else
 		{
-			//TODO: Filter cause.
-			return false;
+			plugin.getLogger().warning("Aborted login - malformed or empty token.");
 		}
 	}
 
 	public boolean getUpdate()
 	{
-		JsonObject responseJson;
 		try
 		{
-			responseJson = sendGet("https://api.telegram.org/bot" + token + "/getUpdates?offset=" + (lastUpdate + 1));
+			TelegramAPI.update(this, token, updateCounter+1);
 		}
-		catch (IOException e)
+		catch (Exception e)
 		{
-			return false;
-		}
-		
-		if (responseJson == null)
-		{
-			return false;
-		}
-		
-		if (responseJson.has("result"))
-		{
-			for (JsonElement resultElement : responseJson.getAsJsonArray("result"))
-			{
-				if (resultElement.isJsonObject())
-				{
-					JsonObject resultObject = (JsonObject) resultElement;
-					
-					if (resultObject.has("update_id"))
-					{
-						lastUpdate = resultObject.get("update_id").getAsInt();
-					}
-					
-					if (resultObject.has("message"))
-					{
-						JsonObject chatObject = resultObject.getAsJsonObject("message").getAsJsonObject("chat");
-						
-						if (chatObject.get("type").getAsString().equals("private"))
-						{
-							int id = chatObject.get("id").getAsInt();
-							//TODO: Set
-							if (!plugin.getData().ids.contains(id))
-							{
-								plugin.getData().ids.add(id);
-							}
-
-							if (resultObject.getAsJsonObject("message").has("text"))
-							{
-								String text = resultObject.getAsJsonObject("message").get("text").getAsString();
-								
-								if (text.length() == 0)
-								{
-									return true;
-								}
-								
-								if (text.equals("/start"))
-								{
-									if (plugin.getData().firstUse)
-									{
-										plugin.getData().firstUse = false;
-										
-										ChatJSON chat = new ChatJSON();
-										chat.chat_id = id;
-										chat.parse_mode = "Markdown";
-										chat.text = "Congratulations, your bot is working! Have fun with this Plugin.";
-										this.sendMsg(chat);
-									}
-									
-									this.sendMessage(id, "You can see the chat but you can't chat at the moment. Type */linktelegram ingame* to chat!");
-								}
-								else if (plugin.getData().pendingLinkTokens.containsKey(text))
-								{
-									plugin.link(plugin.getData().pendingLinkTokens.get(text), id);
-									plugin.getData().pendingLinkTokens.remove(text);
-								}
-								else if (plugin.getData().linkedChats.containsKey(id))
-								{
-									plugin.sendToMC(plugin.getData().linkedChats.get(id), text, id);
-								}
-								else
-								{
-									this.sendMessage(id, "Sorry, please link your account with */linktelegram ingame* to use the chat!");
-								}
-							}
-						}
-						else if (chatObject.get("type").getAsString().equals("group"))
-						{
-							int id = chatObject.get("id").getAsInt();
-							//TODO: Set
-							if (!plugin.getData().ids.contains(id))
-							{
-								plugin.getData().ids.add(id);
-							}
-						}
-					}
-				}
-			}
+			
 		}
 		
 		return true;
@@ -207,66 +183,22 @@ public class Telegram
 		}).start();
 	}
 
-	public void post(String method, String json)
 	{
-		try
 		{
-			String body = json;
-			URL url = new URL("https://api.telegram.org/bot" + token + "/" + method);
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			
-			connection.setRequestMethod("POST");
-			connection.setDoInput(true);
-			connection.setDoOutput(true);
-			connection.setUseCaches(false);
-			connection.setRequestProperty("Content-Type", "application/json; ; Charset=UTF-8");
-			connection.setRequestProperty("Content-Length", String.valueOf(body.length()));
-
-			DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(wr, "UTF-8"));
-			
-			writer.write(body);
-			
-			writer.close();
-			wr.close();
-
-			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			while(reader.readLine() != null);
-			reader.close();
 			if(!healthyConnection)
 			{
 				healthyConnection = true;
 				plugin.getLogger().info("Bot is available again.");
 			}
 		}
-		catch (Exception e)
 		{
-			//TODO: validate login
 			if(healthyConnection)
 			{
 				healthyConnection = false;
-				plugin.getLogger().warning("Error sending message. Attempting to reconnect silently.");
 			}
 		}
 	}
 
-	public JsonObject sendGet(String urlString) throws IOException
-	{
-		URL url = new URL(urlString);
-		URLConnection connection = url.openConnection();
-
-		BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-		String content = "";
-		String inputLine;
-		while ((inputLine = br.readLine()) != null)
-		{
-			content += inputLine;
-		}
-
-		br.close();
-		return new JsonParser().parse(content).getAsJsonObject();
-	}
 	
 	public boolean isConnected()
 	{
