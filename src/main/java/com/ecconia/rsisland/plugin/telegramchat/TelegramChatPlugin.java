@@ -171,6 +171,12 @@ public class TelegramChatPlugin extends JavaPlugin
 		return linkToken;
 	}
 
+	public Set<Integer> getReceivingChatIDs()
+	{
+		return data.ids;
+	}
+
+	//#########################################################################
 	
 	public void disableTriggers()
 	{
@@ -189,13 +195,10 @@ public class TelegramChatPlugin extends JavaPlugin
 		{
 			public void run()
 			{
+				//TODO: find non-loop solution
 				if(telegramConnector.isRegistered())
 				{
-					if(telegramConnector.isUpdating())
-					{
-//						getLogger().warning("Skipped updating, since update still goin on.");
-					}
-					else
+					if(!telegramConnector.isUpdating())
 					{
 						telegramConnector.update();
 					}
@@ -219,10 +222,5 @@ public class TelegramChatPlugin extends JavaPlugin
 		{
 			getServer().getPluginManager().registerEvents(new JoinLeaveListener(this), this);
 		}
-	}
-
-	public Set<Integer> getReceivingChatIDs()
-	{
-		return data.ids;
 	}
 }
