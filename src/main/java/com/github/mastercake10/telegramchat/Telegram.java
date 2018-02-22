@@ -99,47 +99,48 @@ public class Telegram implements UpdateHandler
 	{
 		this.plugin = plugin;
 		this.token = token;
-		if(!authentificate())
+		sds = new StopDebugSpam(true, plugin.getLogger());
+		
+		try
 		{
-			healthyConnection = false;
-			plugin.getLogger().severe("Could not login as bot with token: " + token);
-			plugin.getLogger().severe("Please update or remove token.");
+			authentificate();
+			plugin.getLogger().info("Logged in as " + name);
+			plugin.enableTriggers();
+		}
+		catch (AnswerException e)
+		{
+			plugin.getLogger().severe("TelegramAPI refuses Token: " + e.getMessage());
+		}
+		catch (ConnectionException e)
+		{
+			plugin.getLogger().severe("Error connecting to TelegramAPI: " + e.getMessage());
+		}
+		catch (InvalidTokenException e)
+		{
+			plugin.getLogger().severe("Stored token is invalid please remove it. Token >" + e.getMessage() + "<");
 		}
 	}
 	
 	public void changeToken(String token)
 	{
 		plugin.disableTriggers();
-		//Assume that at this point no call from the mainthread will be done anymore.
-		
 		
 		this.token = token;
-		boolean success = authentificate();
-		if(!success)
-		{
-			healthyConnection = false;
-			plugin.getLogger().warning("Could not login as bot with token: " + token);
-		}
-		else
-		{
-			healthyConnection = true;
-		}
-		return success;
+		authentificate();
+
+		sds.setState(true);
 	}
 
-	//Should only be called once, to register the bot (not every second)
 	private void authentificate()
 	{
-		//TODO: Catch special exception
 		if(token != null && token.matches("[0-9]+:[A-Za-z0-9]+"))
 		{
-			plugin.getLogger().info("Token: >" + token + "<");
+			plugin.getLogger().info("Login attempt with token: >" + token + "<");
 			name = TelegramAPI.login(token);
-			plugin.getLogger().info(name + " login successfully.");
 		}
 		else
 		{
-			plugin.getLogger().warning("Aborted login - malformed or empty token.");
+			throw new InvalidTokenException(token);
 		}
 	}
 

@@ -6,6 +6,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.github.mastercake10.telegramchat.http.ConnectionException;
+import com.github.mastercake10.telegramchat.telegram.AnswerException;
+
 //TODO: reload, status
 //TODO: oops add permission check again.
 public class CommandTelegram implements CommandExecutor
@@ -70,14 +73,30 @@ public class CommandTelegram implements CommandExecutor
 				String token = args[1];
 				
 				plugin.setToken(token);
-				if (plugin.getTelegramHook().changeToken(token))
+				
+				try
 				{
+					plugin.getTelegramHook().changeToken(token);
+					plugin.getLogger().info("Logged in as " + plugin.getTelegramHook().getName());
+					plugin.enableTriggers();
+					
 					sender.sendMessage(ChatColor.GREEN + "Successfully connected to Telegram!");
 					sender.sendMessage(ChatColor.GREEN + "Add " + plugin.getTelegramHook().getName() + " to Telegram!");
 				}
-				else
+				catch (AnswerException e)
 				{
-					sender.sendMessage(ChatColor.RED + "Invalid token, please check the token again.");
+					plugin.getLogger().severe("TelegramAPI refuses Token: " + e.getMessage());
+					sender.sendMessage(ChatColor.RED + "TelegramAPI refuses Token: " + e.getMessage());
+				}
+				catch (ConnectionException e)
+				{
+					plugin.getLogger().severe("Error connecting to TelegramAPI: " + e.getMessage());
+					sender.sendMessage(ChatColor.RED + "Error connecting to TelegramAPI: " + e.getMessage());
+				}
+				catch (InvalidTokenException e)
+				{
+					plugin.getLogger().severe("Applied an invalid token, please change. Token >" + e.getMessage() + "<");
+					sender.sendMessage(ChatColor.RED + "The token has a wrong format. Token >" + e.getMessage() + "<");
 				}
 			}
 			else

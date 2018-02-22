@@ -14,6 +14,11 @@ public class StopDebugSpam
 		
 	}
 	
+	public synchronized void setState(boolean state)
+	{
+		goodState = state;
+	}
+	
 	public synchronized void good()
 	{
 		goodState = true;
