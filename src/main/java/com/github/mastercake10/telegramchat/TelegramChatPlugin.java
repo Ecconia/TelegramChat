@@ -51,7 +51,7 @@ public class TelegramChatPlugin extends JavaPlugin
 					telegramHook.update();
 				}
 			}
-		}, 20L, 20L);
+		}, 20L, 60L);
 	}
 
 	@Override
