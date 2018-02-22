@@ -169,8 +169,11 @@ public class TelegramChatPlugin extends JavaPlugin
 	public void disableTriggers()
 	{
 		HandlerList.unregisterAll(this);
-		getServer().getScheduler().cancelTask(timer.getTaskId());
-		timer = null;
+		if(timer != null)
+		{
+			getServer().getScheduler().cancelTask(timer.getTaskId());
+			timer = null;
+		}
 	}
 	
 	public void enableTriggers()
