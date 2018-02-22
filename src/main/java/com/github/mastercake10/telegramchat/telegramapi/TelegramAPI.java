@@ -28,11 +28,10 @@ public class TelegramAPI
 		Connection.postRequest(url, json);
 	}
 
-	public static JsonObject update(UpdateHandler handler, String token, int i)
+	public static void update(UpdateHandler handler, String token, int i)
 	{
 		Result res = Connection.getRequest("https://api.telegram.org/bot" + token + "/getUpdates?offset=" + i);
 		//Request came back - next can be sent
-		handler.updateDone();
 		
 		JsonObject json = new JsonParser().parse(res.getContent()).getAsJsonObject();
 		
@@ -57,8 +56,10 @@ public class TelegramAPI
 					
 					if (resultObject.has("update_id"))
 					{
-						handler.setNextUpdate(resultObject.get("update_id").getAsInt());
+						handler.setUpdateID(resultObject.get("update_id").getAsInt());
 					}
+					
+					handler.updateDone();
 					
 					if (resultObject.has("message"))
 					{
@@ -76,10 +77,12 @@ public class TelegramAPI
 						
 						handler.message(chatType, chatID, text);
 					}
+					return;
 				}
 			}
 		}
-		
-		return null;
+		handler.updateDone();
+
+		return;
 	}
 }
