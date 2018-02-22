@@ -3,7 +3,7 @@ package com.github.mastercake10.telegramchat.telegram;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.github.mastercake10.telegramchat.ChatJSON;
+import com.github.mastercake10.telegramchat.Message;
 import com.github.mastercake10.telegramchat.TelegramChatPlugin;
 import com.github.mastercake10.telegramchat.http.ConnectionException;
 import com.github.mastercake10.telegramchat.telegramapi.AnswerException;
@@ -198,11 +198,9 @@ public class TelegramConnector implements UpdateHandler
 
 	//#########################################################################
 	
-	public void sendToChat(int id, String msg)
+	public void sendToChat(int chatID, String content)
 	{
-		ChatJSON chat = new ChatJSON();
-		chat.chat_id = id;
-		chat.text = msg;
+		Message message = new Message(chatID, content);
 		
 		//Move on a thread too, since it may freeze (and it did in the past) the server.
 		String mainThreadToken = token;
@@ -210,16 +208,16 @@ public class TelegramConnector implements UpdateHandler
 		{
 			public void run()
 			{
-				sendMessage(mainThreadToken, chat);
+				sendMessage(mainThreadToken, message);
 			}
 		}).start();
 	}
 
-	private void sendMessage(String mainThreadToken, ChatJSON chat)
+	private void sendMessage(String mainThreadToken, Message message)
 	{
 		try
 		{
-			TelegramAPI.sendMessage(mainThreadToken, new Gson().toJson(chat, ChatJSON.class));
+			TelegramAPI.sendMessage(mainThreadToken, new Gson().toJson(message, Message.class));
 			sds.good("Bot is available again.");
 		}
 		catch (ConnectionException e)
@@ -228,7 +226,7 @@ public class TelegramConnector implements UpdateHandler
 		}
 	}
 
-	public void sendToAllChats(final ChatJSON chat)
+	public void sendToAllChats(final Message message)
 	{
 		//Get the token, as long as we are in the safe mainthread.
 		String mainThreadToken = token;
@@ -240,8 +238,8 @@ public class TelegramConnector implements UpdateHandler
 			{
 				for (int id : ids)
 				{
-					chat.chat_id = id;
-					sendMessage(mainThreadToken, chat);
+					message.setChatID(id);
+					sendMessage(mainThreadToken, message);
 				}
 			}
 		}).start();

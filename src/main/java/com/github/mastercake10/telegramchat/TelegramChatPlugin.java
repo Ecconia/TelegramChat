@@ -115,7 +115,7 @@ public class TelegramChatPlugin extends JavaPlugin
 	{
 		data.linkedChats.put(chatID, playerUUID);
 		OfflinePlayer offlinePlayer = getServer().getOfflinePlayer(playerUUID);
-		//TODO: ensure correct thread.
+
 		telegramConnector.sendToChat(chatID, "Success! Linked " + offlinePlayer.getName());
 	}
 

@@ -1,5 +1,6 @@
 package com.github.mastercake10.telegramchat;
 
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -25,10 +26,8 @@ public class Listeners implements Listener
 		}
 		if (plugin.getTelegramConnector().isConnected())
 		{
-			ChatJSON chat = new ChatJSON();
-			chat.parse_mode = "Markdown";
-			chat.text = "`" + e.getPlayer().getName() + " joined the game.`";
-			plugin.getTelegramConnector().sendToAllChats(chat);
+			Message message = new Message("`" + e.getPlayer().getName() + " joined the game.`");
+			plugin.getTelegramConnector().sendToAllChats(message);
 		}
 	}
 
@@ -41,10 +40,8 @@ public class Listeners implements Listener
 		}
 		if (plugin.getTelegramConnector().isConnected())
 		{
-			ChatJSON chat = new ChatJSON();
-			chat.parse_mode = "Markdown";
-			chat.text = "`" + e.getDeathMessage() + "`";
-			plugin.getTelegramConnector().sendToAllChats(chat);
+			Message message = new Message("`" + e.getDeathMessage() + "`");
+			plugin.getTelegramConnector().sendToAllChats(message);
 		}
 	}
 
@@ -57,10 +54,8 @@ public class Listeners implements Listener
 		}
 		if (plugin.getTelegramConnector().isConnected())
 		{
-			ChatJSON chat = new ChatJSON();
-			chat.parse_mode = "Markdown";
-			chat.text = "`" + e.getPlayer().getName() + " left the game.`";
-			plugin.getTelegramConnector().sendToAllChats(chat);
+			Message message = new Message("`" + e.getPlayer().getName() + " left the game.`");
+			plugin.getTelegramConnector().sendToAllChats(message);
 		}
 	}
 
@@ -73,10 +68,8 @@ public class Listeners implements Listener
 		}
 		if (plugin.getTelegramConnector().isConnected())
 		{
-			ChatJSON chat = new ChatJSON();
-			chat.parse_mode = "Markdown";
-			chat.text = escape(e.getPlayer().getName()) + ": " + escape(e.getMessage()).replaceAll("§.", "");
-			plugin.getTelegramConnector().sendToAllChats(chat);
+			Message message = new Message(escape(e.getPlayer().getName()) + ": " + escape(e.getMessage()).replaceAll(ChatColor.COLOR_CHAR + ".", ""));
+			plugin.getTelegramConnector().sendToAllChats(message);
 		}
 	}
 	
