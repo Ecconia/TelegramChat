@@ -102,7 +102,7 @@ public class TelegramChatPlugin extends JavaPlugin
 		for (int id : receivers)
 		{
 			//TODO: ensure correct thread.
-			telegramHook.sendMessage(id, msgF);
+			telegramHook.sendToChat(id, msgF);
 		}
 		
 		//TODO: config to allow this??
@@ -114,7 +114,7 @@ public class TelegramChatPlugin extends JavaPlugin
 		data.linkedChats.put(chatID, playerUUID);
 		OfflinePlayer offlinePlayer = getServer().getOfflinePlayer(playerUUID);
 		//TODO: ensure correct thread.
-		telegramHook.sendMessage(chatID, "Success! Linked " + offlinePlayer.getName());
+		telegramHook.sendToChat(chatID, "Success! Linked " + offlinePlayer.getName());
 	}
 
 	//TODO: Resulting token looks suspicious, check usage, rewrite

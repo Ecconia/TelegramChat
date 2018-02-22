@@ -28,7 +28,7 @@ public class Listeners implements Listener
 			ChatJSON chat = new ChatJSON();
 			chat.parse_mode = "Markdown";
 			chat.text = "`" + e.getPlayer().getName() + " joined the game.`";
-			plugin.getTelegramHook().sendAll(chat);
+			plugin.getTelegramHook().sendToAllChats(chat);
 		}
 	}
 
@@ -44,7 +44,7 @@ public class Listeners implements Listener
 			ChatJSON chat = new ChatJSON();
 			chat.parse_mode = "Markdown";
 			chat.text = "`" + e.getDeathMessage() + "`";
-			plugin.getTelegramHook().sendAll(chat);
+			plugin.getTelegramHook().sendToAllChats(chat);
 		}
 	}
 
@@ -62,7 +62,7 @@ public class Listeners implements Listener
 			chat.text = "`" + e.getPlayer().getName() + " left the game.`";
 			//TODO: to be removed...
 			System.out.println(chat.text);
-			plugin.getTelegramHook().sendAll(chat);
+			plugin.getTelegramHook().sendToAllChats(chat);
 		}
 	}
 
@@ -78,7 +78,7 @@ public class Listeners implements Listener
 			ChatJSON chat = new ChatJSON();
 			chat.parse_mode = "Markdown";
 			chat.text = escape(e.getPlayer().getName()) + ": " + escape(e.getMessage()).replaceAll("§.", "");
-			plugin.getTelegramHook().sendAll(chat);
+			plugin.getTelegramHook().sendToAllChats(chat);
 		}
 	}
 	

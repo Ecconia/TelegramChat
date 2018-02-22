@@ -178,7 +178,7 @@ public class Telegram implements UpdateHandler
 
 	//#########################################################################
 	
-	public void sendMessage(int id, String msg)
+	public void sendToChat(int id, String msg)
 	{
 		ChatJSON chat = new ChatJSON();
 		chat.chat_id = id;
@@ -190,12 +190,12 @@ public class Telegram implements UpdateHandler
 		{
 			public void run()
 			{
-				sendMsg(mainThreadToken, chat);
+				sendMessage(mainThreadToken, chat);
 			}
 		}).start();
 	}
 
-	public void sendMsg(String mainThreadToken, ChatJSON chat)
+	private void sendMessage(String mainThreadToken, ChatJSON chat)
 	{
 		try
 		{
@@ -208,7 +208,7 @@ public class Telegram implements UpdateHandler
 		}
 	}
 
-	public void sendAll(final ChatJSON chat)
+	public void sendToAllChats(final ChatJSON chat)
 	{
 		//Get the token, as long as we are in the safe mainthread.
 		String mainThreadToken = token;
@@ -221,7 +221,7 @@ public class Telegram implements UpdateHandler
 				for (int id : ids)
 				{
 					chat.chat_id = id;
-					sendMsg(mainThreadToken, chat);
+					sendMessage(mainThreadToken, chat);
 				}
 			}
 		}).start();
