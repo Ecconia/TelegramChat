@@ -34,7 +34,7 @@ public class TelegramConnector implements UpdateHandler
 	@Override
 	public void message(int userID, String chatType, int chatID, String text)
 	{
-//		plugin.getLogger().info("Telegram message; Type:" + chatType + " ID:" + chatID + " Text:" + text);
+//		plugin.getLogger().info("Telegram message; Type:" + chatType + " ChatID:" + chatID + " UserID:" + userID + " Text:" + text);
 		
 //		if (chatType.equals("private"))
 //		{
@@ -226,7 +226,9 @@ public class TelegramConnector implements UpdateHandler
 		catch (AnswerException e)
 		{
 			//Handle 403:"Forbidden: bot was blocked by the user"
-			if(e.getErrorCode() == 403 && e.getContent().equals("Forbidden: bot was blocked by the user"))
+			if(e.getErrorCode() == 403 && 
+					(e.getContent().equals("Forbidden: bot was blocked by the user") ||
+					e.getContent().equals("Forbidden: bot was kicked from the group chat")))
 			{
 				//Remove that chat from receivers:
 				plugin.removeChat(message.getChatID());
