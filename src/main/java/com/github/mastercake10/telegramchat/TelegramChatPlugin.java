@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.gson.Gson;
@@ -172,5 +173,12 @@ public class TelegramChatPlugin extends JavaPlugin
 	{
 		data.token = token;
 		save();
+	}
+	
+	public String getNewLinkToken(Player player)
+	{
+		String linkToken = generateLinkToken();
+		data.pendingLinkTokens.put(linkToken, player.getUniqueId());
+		return linkToken;
 	}
 }

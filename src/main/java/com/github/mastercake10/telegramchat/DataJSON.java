@@ -9,11 +9,9 @@ public class DataJSON
 {
 	public String token = "";
 	
-	//Player name // ChatID
 	public HashMap<Integer, UUID> linkedChats = new HashMap<Integer, UUID>();
 	
-	//Player name // RandomInt
-	public HashMap<String, UUID> linkCodes = new HashMap<String, UUID>();
+	public HashMap<String, UUID> pendingLinkTokens = new HashMap<String, UUID>();
 	
 	public List<Integer> ids = new ArrayList<Integer>();
 	

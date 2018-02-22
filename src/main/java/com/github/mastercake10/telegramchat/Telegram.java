@@ -123,10 +123,10 @@ public class Telegram
 									
 									this.sendMessage(id, "You can see the chat but you can't chat at the moment. Type */linktelegram ingame* to chat!");
 								}
-								else if (plugin.getData().linkCodes.containsKey(text))
+								else if (plugin.getData().pendingLinkTokens.containsKey(text))
 								{
-									plugin.link(plugin.getData().linkCodes.get(text), id);
-									plugin.getData().linkCodes.remove(text);
+									plugin.link(plugin.getData().pendingLinkTokens.get(text), id);
+									plugin.getData().pendingLinkTokens.remove(text);
 								}
 								else if (plugin.getData().linkedChats.containsKey(id))
 								{
