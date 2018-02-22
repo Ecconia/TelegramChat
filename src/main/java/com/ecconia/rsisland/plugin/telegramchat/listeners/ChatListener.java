@@ -23,13 +23,20 @@ public class ChatListener implements Listener
 	{
 		if (!event.isCancelled())
 		{
-			Message message = new Message(escape("*" + event.getPlayer().getName()) + "*: " + escape(event.getMessage()).replaceAll(ChatColor.COLOR_CHAR + ".", ""));
+			String playername = escape(event.getPlayer().getName());
+			String content = escape(event.getMessage()).replaceAll(ChatColor.COLOR_CHAR + ".", "");
+			
+			Message message = new Message("*" + playername + "*: " + content);
 			plugin.getTelegramConnector().sendToAllChats(message);
 		}
 	}
 	
 	public String escape(String str)
 	{
-		return str.replace("_", "\\_");
+		//TODO: Config for this.
+		//TODO: investigate this commit: https://github.com/jpsheehan/TelegramChat17/commit/fecfe30bcb24e8e352fd761a35898ba936265bed
+		str = str.replace("_", "\\_");
+		str = str.replace("*", "\\*");
+		return str;
 	}
 }
