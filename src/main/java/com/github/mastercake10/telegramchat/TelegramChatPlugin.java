@@ -187,4 +187,9 @@ public class TelegramChatPlugin extends JavaPlugin
 			}
 		}, 20L, 60L);
 	}
+
+	public List<Integer> getIDs()
+	{
+		return data.ids;
+	}
 }

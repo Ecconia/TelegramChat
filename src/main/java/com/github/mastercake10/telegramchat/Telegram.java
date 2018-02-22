@@ -216,12 +216,13 @@ public class Telegram implements UpdateHandler
 	{
 		//Get the token, as long as we are in the safe mainthread.
 		String mainThreadToken = token;
+		List<Integer> ids = new ArrayList<>(plugin.getIDs());
 		
 		new Thread(new Runnable()
 		{
 			public void run()
 			{
-				for (int id : plugin.getData().ids)
+				for (int id : ids)
 				{
 					chat.chat_id = id;
 					sendMsg(mainThreadToken, chat);
