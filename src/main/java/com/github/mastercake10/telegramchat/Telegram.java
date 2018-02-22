@@ -155,51 +155,6 @@ public class Telegram implements UpdateHandler
 		return true;
 	}
 
-	public void sendMessage(int id, String msg)
-	{
-		ChatJSON chat = new ChatJSON();
-		chat.chat_id = id;
-		chat.text = msg;
-		sendMsg(chat);
-	}
-
-	public void sendMsg(ChatJSON chat)
-	{
-		post("sendMessage", new Gson().toJson(chat, ChatJSON.class));
-	}
-
-	public void sendAll(final ChatJSON chat)
-	{
-		new Thread(new Runnable()
-		{
-			public void run()
-			{
-				for (int id : plugin.getData().ids)
-				{
-					chat.chat_id = id;
-					sendMsg(chat);
-				}
-			}
-		}).start();
-	}
-
-	{
-		{
-			if(!healthyConnection)
-			{
-				healthyConnection = true;
-				plugin.getLogger().info("Bot is available again.");
-			}
-		}
-		{
-			if(healthyConnection)
-			{
-				healthyConnection = false;
-			}
-		}
-	}
-
-	
 	public boolean isConnected()
 	{
 		//TODO: ehm nope...
@@ -235,4 +190,47 @@ public class Telegram implements UpdateHandler
 			}
 		}
 	}
+
+	//#########################################################################
+	
+	public void sendMessage(int id, String msg)
+	{
+		ChatJSON chat = new ChatJSON();
+		chat.chat_id = id;
+		chat.text = msg;
+		
+		//Move on a thread too, since it may freeze (and it did in the past) the server.
+		String mainThreadToken = token;
+		new Thread(new Runnable()
+		{
+			public void run()
+			{
+				sendMsg(mainThreadToken, chat);
+			}
+		}).start();
+	}
+
+	public void sendMsg(String mainThreadToken, ChatJSON chat)
+	{
+		TelegramAPI.sendMessage(mainThreadToken, new Gson().toJson(chat, ChatJSON.class));
+	}
+
+	public void sendAll(final ChatJSON chat)
+	{
+		//Get the token, as long as we are in the safe mainthread.
+		String mainThreadToken = token;
+		
+		new Thread(new Runnable()
+		{
+			public void run()
+			{
+				for (int id : plugin.getData().ids)
+				{
+					chat.chat_id = id;
+					sendMsg(mainThreadToken, chat);
+				}
+			}
+		}).start();
+	}
+
 }
