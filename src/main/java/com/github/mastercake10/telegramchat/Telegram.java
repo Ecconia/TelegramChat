@@ -201,7 +201,15 @@ public class Telegram implements UpdateHandler
 
 	public void sendMsg(String mainThreadToken, ChatJSON chat)
 	{
-		TelegramAPI.sendMessage(mainThreadToken, new Gson().toJson(chat, ChatJSON.class));
+		try
+		{
+			TelegramAPI.sendMessage(mainThreadToken, new Gson().toJson(chat, ChatJSON.class));
+			sds.good("Bot is available again.");
+		}
+		catch (ConnectionException e)
+		{
+			sds.bad("Error connecting to TelegramAPI: " + e.getMessage());
+		}
 	}
 
 	public void sendAll(final ChatJSON chat)

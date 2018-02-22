@@ -14,17 +14,17 @@ public class StopDebugSpam
 		
 	}
 	
-	public void good()
+	public synchronized void good()
 	{
 		goodState = true;
 	}
 	
-	public void bad()
+	public synchronized void bad()
 	{
 		goodState = false;
 	}
 	
-	public void good(String info)
+	public synchronized void good(String info)
 	{
 		if(!goodState)
 		{
@@ -33,7 +33,7 @@ public class StopDebugSpam
 		goodState = true;
 	}
 	
-	public void bad(String error)
+	public synchronized void bad(String error)
 	{
 		if(goodState)
 		{
