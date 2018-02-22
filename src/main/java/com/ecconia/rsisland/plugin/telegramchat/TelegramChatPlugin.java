@@ -1,11 +1,7 @@
 package com.ecconia.rsisland.plugin.telegramchat;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -22,14 +18,10 @@ import com.ecconia.rsisland.plugin.telegramchat.listeners.ChatListener;
 import com.ecconia.rsisland.plugin.telegramchat.listeners.DeathListener;
 import com.ecconia.rsisland.plugin.telegramchat.listeners.JoinLeaveListener;
 import com.ecconia.rsisland.plugin.telegramchat.telegram.TelegramConnector;
-import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 public class TelegramChatPlugin extends JavaPlugin
 {
-	private File dataFile;
-
-	@Deprecated
-	private DataJSON data;
 	private TelegramConnector telegramConnector;
 	
 	private DataStorage storage;
@@ -41,16 +33,35 @@ public class TelegramChatPlugin extends JavaPlugin
 	public void onEnable()
 	{
 		saveDefaultConfig();
-
 		pendingUserTokens = new HashMap<>();
-		storage = new DataStorage();
-		
-		dataFile = new File(getDataFolder(), "data.json");
-		data = new DataJSON();
+
+		try
+		{
+			storage = new DataStorage(new File(getDataFolder(), "data.json"), getLogger());
+		}
+		catch (JsonSyntaxException e)
+		{
+			getLogger().severe("Corrupted data file.");
+			e.printStackTrace();
+			getServer().getPluginManager().disablePlugin(this);
+			return;
+		}
+		catch (ClassNotFoundException e)
+		{
+			getLogger().severe("Internal error, please report to the developer in charge.");
+			e.printStackTrace();
+			getServer().getPluginManager().disablePlugin(this);
+			return;
+		}
+		catch (IOException e)
+		{
+			getLogger().severe("IOException while reading data-file.");
+			e.printStackTrace();
+			getServer().getPluginManager().disablePlugin(this);
+			return;
+		}
 		
 		getCommand("telegram").setExecutor(new CommandTelegram(this));
-		
-		load();
 		
 		telegramConnector = new TelegramConnector(this, getConfig().getString("token"));
 	}
@@ -58,47 +69,10 @@ public class TelegramChatPlugin extends JavaPlugin
 	@Override
 	public void onDisable()
 	{
-		//TODO: Required?
-		save();
-	}
-
-	public void load()
-	{
-		if (dataFile.exists())
-		{
-			try
-			{
-				FileInputStream fin = new FileInputStream(dataFile);
-				ObjectInputStream ois = new ObjectInputStream(fin);
-				
-				data = (DataJSON) new Gson().fromJson((String) ois.readObject(), DataJSON.class);
-				
-				ois.close();
-				fin.close();
-			}
-			catch (Exception e)
-			{
-				getLogger().severe("Could not load data file. (IOException)");
-			}
-		}
-	}
-	
-	public void save()
-	{
-		try
-		{
-			FileOutputStream fout = new FileOutputStream(dataFile);
-			ObjectOutputStream oos = new ObjectOutputStream(fout);
-
-			oos.writeObject(new Gson().toJson(data));
-			
-			fout.close();
-			oos.close();
-		}
-		catch (IOException e)
-		{
-			getLogger().severe("Could not save data file. (IOException)");
-		}
+		pendingUserTokens = null;
+		disableTriggers();
+		storage = null;
+		telegramConnector = null;
 	}
 
 	public void broadcastTelegramMessage(UUID playerUUID, String message, int senderID)
