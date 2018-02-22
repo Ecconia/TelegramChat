@@ -1,5 +1,7 @@
 package com.github.mastercake10.telegramchat;
 
+import com.github.mastercake10.telegramchat.http.ConnectionException;
+import com.github.mastercake10.telegramchat.telegram.AnswerException;
 import com.github.mastercake10.telegramchat.telegram.TelegramAPI;
 import com.github.mastercake10.telegramchat.telegram.UpdateHandler;
 import com.google.gson.Gson;
@@ -20,6 +22,7 @@ public class Telegram implements UpdateHandler
 	private boolean healthyConnection = true;
 	
 	private final TelegramChatPlugin plugin;
+	private final StopDebugSpam sds;
 	
 	//#########################################################################
 	
@@ -144,18 +147,21 @@ public class Telegram implements UpdateHandler
 		}
 	}
 
-	public boolean getUpdate()
+	public void update()
 	{
 		try
 		{
 			TelegramAPI.update(this, token, updateCounter+1);
+			sds.good("Bot is available again.");
 		}
-		catch (Exception e)
+		catch (AnswerException e)
 		{
-			
+			sds.bad("Server sent bad answer: " + e.getMessage());
 		}
-		
-		return true;
+		catch (ConnectionException e)
+		{
+			sds.bad("Error connecting to TelegramAPI: " + e.getMessage());
+		}
 	}
 
 	public boolean isConnected()
@@ -172,26 +178,6 @@ public class Telegram implements UpdateHandler
 	public String getName()
 	{
 		return name;
-	}
-
-	public void update()
-	{
-		if(getUpdate())
-		{
-			if(!healthyConnection)
-			{
-				healthyConnection = true;
-				plugin.getLogger().info("Bot is available again.");
-			}
-		}
-		else
-		{
-			if(healthyConnection)
-			{
-				healthyConnection = false;
-				plugin.getLogger().warning("Error loading messages. Attempting to reconnect silently.");
-			}
-		}
 	}
 
 	//#########################################################################
