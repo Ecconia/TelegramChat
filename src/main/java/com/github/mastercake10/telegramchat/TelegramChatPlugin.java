@@ -188,7 +188,7 @@ public class TelegramChatPlugin extends JavaPlugin
 					telegramHook.update();
 				}
 			}
-		}, 20L, 60L);
+		}, 20L, 70L);
 	}
 
 	public List<Integer> getIDs()
