@@ -52,7 +52,7 @@ public class Connection
 		return null;
 	}
 	
-	public static void postRequest(String url, String json)
+	public static Result postRequest(String url, String json)
 	{
 		try
 		{
@@ -73,9 +73,21 @@ public class Connection
 			writer.close();
 			wr.close();
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			while(reader.readLine() != null);
+			String content = "";
+			int responseCode = connection.getResponseCode();
+			
+			InputStream is = responseCode == 200 ? connection.getInputStream() : connection.getErrorStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+			
+			String inputLine;
+			while ((inputLine = reader.readLine()) != null)
+			{
+				content += inputLine;
+			}
+			
 			reader.close();
+			
+			return new Result(responseCode, content);
 		}
 		catch (MalformedURLException e)
 		{
@@ -97,5 +109,7 @@ public class Connection
 			//Throw it, something is wrong.
 			throw new ConnectionException("IOException: " + e.getMessage());
 		}
+		
+		return null;
 	}
 }

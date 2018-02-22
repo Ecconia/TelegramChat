@@ -25,7 +25,12 @@ public class TelegramAPI
 	public static void sendMessage(String token, String json)
 	{
 		String url = "https://api.telegram.org/bot" + token + "/sendMessage";
-		Connection.postRequest(url, json);
+		Result res = Connection.postRequest(url, json);
+		
+		if(res.getResponse() != 200)
+		{
+			throw new AnswerException(new JsonParser().parse(res.getContent()).getAsJsonObject());
+		}
 	}
 
 	public static void update(UpdateHandler handler, String token, int i)
