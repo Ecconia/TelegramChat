@@ -187,7 +187,14 @@ public class TelegramChatPlugin extends JavaPlugin
 			{
 				if(telegramConnector.isRegistered())
 				{
-					telegramConnector.update();
+					if(telegramConnector.isUpdating())
+					{
+						getLogger().warning("Skipped updating, since update still goin on.");
+					}
+					else
+					{
+						telegramConnector.update();
+					}
 				}
 			}
 		}, 20L, 70L);

@@ -31,6 +31,8 @@ public class TelegramAPI
 	public static JsonObject update(UpdateHandler handler, String token, int i)
 	{
 		Result res = Connection.getRequest("https://api.telegram.org/bot" + token + "/getUpdates?offset=" + i);
+		//Request came back - next can be sent
+		handler.updateDone();
 		
 		JsonObject json = new JsonParser().parse(res.getContent()).getAsJsonObject();
 		

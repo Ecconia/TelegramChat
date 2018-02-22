@@ -24,7 +24,9 @@ public class TelegramConnector implements UpdateHandler
 	
 	//#########################################################################
 	
-	private int updateCounter = 0;
+	private int updateCounter;
+	
+	private boolean updating;
 	
 	@Override
 	public void setNextUpdate(int i)
@@ -94,6 +96,12 @@ public class TelegramConnector implements UpdateHandler
 //		}
 	}
 	
+	@Override
+	public void updateDone()
+	{
+		updating = false;
+	}
+	
 	//#########################################################################
 	
 	//TODO: authentification should be threaded!
@@ -152,6 +160,7 @@ public class TelegramConnector implements UpdateHandler
 	{
 		try
 		{
+			updating = true;
 			TelegramAPI.update(this, token, updateCounter+1);
 			sds.good("Bot is available again.");
 		}
@@ -161,6 +170,7 @@ public class TelegramConnector implements UpdateHandler
 		}
 		catch (ConnectionException e)
 		{
+			updating = false;
 			sds.bad("Error connecting to TelegramAPI: " + e.getMessage());
 		}
 	}
@@ -179,6 +189,11 @@ public class TelegramConnector implements UpdateHandler
 	public String getName()
 	{
 		return name;
+	}
+
+	public boolean isUpdating()
+	{
+		return updating;
 	}
 
 	//#########################################################################
@@ -231,5 +246,4 @@ public class TelegramConnector implements UpdateHandler
 			}
 		}).start();
 	}
-
 }
