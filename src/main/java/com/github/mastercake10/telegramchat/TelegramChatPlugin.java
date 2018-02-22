@@ -15,7 +15,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.mastercake10.telegramchat.components.ChatMessageToMc;
 import com.google.gson.Gson;
 
 public class TelegramChatPlugin extends JavaPlugin
@@ -41,7 +40,6 @@ public class TelegramChatPlugin extends JavaPlugin
 		load();
 		
 		telegramHook = new Telegram(this);
-		API.setHook(telegramHook);
 		telegramHook.auth(data.token);
 
 		//TODO: enable when token set
@@ -112,12 +110,7 @@ public class TelegramChatPlugin extends JavaPlugin
 		}
 	}
 
-	public void sendToMC(ChatMessageToMc chatMsg)
-	{
-		sendToMC(chatMsg.getSenderUUID(), chatMsg.getContent(), chatMsg.getSenderChatID());
-	}
-
-	private void sendToMC(UUID playerUUID, String message, int senderID)
+	public void sendToMC(UUID playerUUID, String message, int senderID)
 	{
 		OfflinePlayer offlinePlayer = getServer().getOfflinePlayer(playerUUID);
 		List<Integer> receivers = new ArrayList<Integer>();

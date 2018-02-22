@@ -9,11 +9,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.github.mastercake10.telegramchat.components.ChatJSON;
-import com.github.mastercake10.telegramchat.components.ChatMessageToMc;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -27,8 +24,6 @@ public class Telegram
 
 	private static int lastUpdate = 0;
 
-	private List<TelegramActionListener> listeners = new ArrayList<TelegramActionListener>();
-
 	private final TelegramChatPlugin plugin;
 	
 	public Telegram(TelegramChatPlugin plugin)
@@ -36,11 +31,6 @@ public class Telegram
 		this.plugin = plugin;
 	}
 	
-	public void addListener(TelegramActionListener actionListener)
-	{
-		listeners.add(actionListener);
-	}
-
 	public boolean auth(String token)
 	{
 		this.token = token;
@@ -137,13 +127,7 @@ public class Telegram
 								}
 								else if (plugin.getData().linkedChats.containsKey(id))
 								{
-									ChatMessageToMc chatMessage = new ChatMessageToMc(plugin.getData().linkedChats.get(id), text, id);
-									for (TelegramActionListener actionListener : listeners)
-									{
-										actionListener.onSendToMinecraft(chatMessage);
-									}
-
-									plugin.sendToMC(chatMessage);
+									plugin.sendToMC(plugin.getData().linkedChats.get(id), text, id);
 								}
 								else
 								{
@@ -161,7 +145,6 @@ public class Telegram
 							}
 						}
 					}
-
 				}
 			}
 		}
@@ -179,11 +162,6 @@ public class Telegram
 
 	public void sendMsg(ChatJSON chat)
 	{
-		for (TelegramActionListener actionListener : listeners)
-		{
-			actionListener.onSendToTelegram(chat);
-		}
-
 		post("sendMessage", new Gson().toJson(chat, ChatJSON.class));
 	}
 
