@@ -1,5 +1,8 @@
 package com.github.mastercake10.telegramchat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.github.mastercake10.telegramchat.http.ConnectionException;
 import com.github.mastercake10.telegramchat.telegram.AnswerException;
 import com.github.mastercake10.telegramchat.telegram.TelegramAPI;
@@ -13,13 +16,6 @@ public class Telegram implements UpdateHandler
 	
 	//Token for authentification:
 	private String token;
-	
-	/*
-	 * True - notify on error, set to false then.
-	 * False - notify on success, set to true then.
-	 */
-	//TODO: Sync or so
-	private boolean healthyConnection = true;
 	
 	private final TelegramChatPlugin plugin;
 	private final StopDebugSpam sds;
