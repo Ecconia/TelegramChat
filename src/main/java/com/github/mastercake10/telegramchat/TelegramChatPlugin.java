@@ -44,21 +44,11 @@ public class TelegramChatPlugin extends JavaPlugin
 		//TODO: enable when token set
 		getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable()
 		{
-			boolean connectionLost = false;
-
 			public void run()
 			{
-				if (connectionLost)
+				if(telegramHook.isRegistered())
 				{
-					if (telegramHook.reconnect())
-					{
-						connectionLost = false;
-					}
-				}
-				
-				if (telegramHook.isConnected())
-				{
-					connectionLost = !telegramHook.getUpdate();
+					telegramHook.update();
 				}
 			}
 		}, 20L, 20L);

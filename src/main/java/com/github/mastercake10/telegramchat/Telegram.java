@@ -22,6 +22,13 @@ public class Telegram
 	//Token for authentification:
 	private String token;
 	
+	/*
+	 * True - notify on error, set to false then.
+	 * False - notify on success, set to true then.
+	 */
+	//TODO: Sync or so
+	private boolean healthyConnection = true;
+	
 	private int lastUpdate = 0;
 
 	private final TelegramChatPlugin plugin;
@@ -30,11 +37,29 @@ public class Telegram
 	{
 		this.plugin = plugin;
 		this.token = token;
+		if(!authentificate())
+		{
+			healthyConnection = false;
+			plugin.getLogger().severe("Could not login as bot with token: " + token);
+			plugin.getLogger().severe("Please update or remove token.");
+		}
 	}
 	
 	public boolean changeToken(String token)
 	{
+		//TODO: Disconnect properly
 		this.token = token;
+		boolean success = authentificate();
+		if(!success)
+		{
+			healthyConnection = false;
+			plugin.getLogger().warning("Could not login as bot with token: " + token);
+		}
+		else
+		{
+			healthyConnection = true;
+		}
+		return success;
 	}
 
 	//Should only be called once, to register the bot (not every second)
@@ -51,7 +76,6 @@ public class Telegram
 		catch (IOException e)
 		{
 			//TODO: Filter cause.
-			plugin.getLogger().warning("Something happend while attempting to login with the bot (invalid token, no connection).");
 			return false;
 		}
 	}
@@ -209,11 +233,20 @@ public class Telegram
 			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			while(reader.readLine() != null);
 			reader.close();
+			if(!healthyConnection)
+			{
+				healthyConnection = true;
+				plugin.getLogger().info("Bot is available again.");
+			}
 		}
 		catch (Exception e)
 		{
 			//TODO: validate login
-			plugin.getLogger().warning("Disconnected from Telegram, reconnect...");
+			if(healthyConnection)
+			{
+				healthyConnection = false;
+				plugin.getLogger().warning("Error sending message. Attempting to reconnect silently.");
+			}
 		}
 	}
 
@@ -249,5 +282,25 @@ public class Telegram
 	public String getName()
 	{
 		return name;
+	}
+
+	public void update()
+	{
+		if(getUpdate())
+		{
+			if(!healthyConnection)
+			{
+				healthyConnection = true;
+				plugin.getLogger().info("Bot is available again.");
+			}
+		}
+		else
+		{
+			if(healthyConnection)
+			{
+				healthyConnection = false;
+				plugin.getLogger().warning("Error loading messages. Attempting to reconnect silently.");
+			}
+		}
 	}
 }
