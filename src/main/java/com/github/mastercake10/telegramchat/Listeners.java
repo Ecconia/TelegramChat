@@ -23,12 +23,12 @@ public class Listeners implements Listener
 		{
 			return;
 		}
-		if (plugin.getTelegramHook().isConnected())
+		if (plugin.getTelegramConnector().isConnected())
 		{
 			ChatJSON chat = new ChatJSON();
 			chat.parse_mode = "Markdown";
 			chat.text = "`" + e.getPlayer().getName() + " joined the game.`";
-			plugin.getTelegramHook().sendToAllChats(chat);
+			plugin.getTelegramConnector().sendToAllChats(chat);
 		}
 	}
 
@@ -39,12 +39,12 @@ public class Listeners implements Listener
 		{
 			return;
 		}
-		if (plugin.getTelegramHook().isConnected())
+		if (plugin.getTelegramConnector().isConnected())
 		{
 			ChatJSON chat = new ChatJSON();
 			chat.parse_mode = "Markdown";
 			chat.text = "`" + e.getDeathMessage() + "`";
-			plugin.getTelegramHook().sendToAllChats(chat);
+			plugin.getTelegramConnector().sendToAllChats(chat);
 		}
 	}
 
@@ -55,12 +55,12 @@ public class Listeners implements Listener
 		{
 			return;
 		}
-		if (plugin.getTelegramHook().isConnected())
+		if (plugin.getTelegramConnector().isConnected())
 		{
 			ChatJSON chat = new ChatJSON();
 			chat.parse_mode = "Markdown";
 			chat.text = "`" + e.getPlayer().getName() + " left the game.`";
-			plugin.getTelegramHook().sendToAllChats(chat);
+			plugin.getTelegramConnector().sendToAllChats(chat);
 		}
 	}
 
@@ -71,12 +71,12 @@ public class Listeners implements Listener
 		{
 			return;
 		}
-		if (plugin.getTelegramHook().isConnected())
+		if (plugin.getTelegramConnector().isConnected())
 		{
 			ChatJSON chat = new ChatJSON();
 			chat.parse_mode = "Markdown";
 			chat.text = escape(e.getPlayer().getName()) + ": " + escape(e.getMessage()).replaceAll("§.", "");
-			plugin.getTelegramHook().sendToAllChats(chat);
+			plugin.getTelegramConnector().sendToAllChats(chat);
 		}
 	}
 	

@@ -9,7 +9,7 @@ import com.github.mastercake10.telegramchat.telegram.TelegramAPI;
 import com.github.mastercake10.telegramchat.telegram.UpdateHandler;
 import com.google.gson.Gson;
 
-public class Telegram implements UpdateHandler
+public class TelegramConnector implements UpdateHandler
 {
 	//Bot info:
 	private String name;
@@ -95,7 +95,7 @@ public class Telegram implements UpdateHandler
 	//#########################################################################
 	
 	//TODO: authentification should be threaded!
-	public Telegram(TelegramChatPlugin plugin, String token)
+	public TelegramConnector(TelegramChatPlugin plugin, String token)
 	{
 		this.plugin = plugin;
 		this.token = token;

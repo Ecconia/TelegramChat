@@ -26,7 +26,7 @@ public class TelegramChatPlugin extends JavaPlugin
 	private File dataFile;
 
 	private DataJSON data;
-	private Telegram telegramHook;
+	private TelegramConnector telegramConnector;
 	
 	private BukkitTask timer;
 
@@ -42,7 +42,7 @@ public class TelegramChatPlugin extends JavaPlugin
 		
 		load();
 		
-		telegramHook = new Telegram(this, data.token);
+		telegramConnector = new TelegramConnector(this, data.token);
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class TelegramChatPlugin extends JavaPlugin
 		for (int id : receivers)
 		{
 			//TODO: ensure correct thread.
-			telegramHook.sendToChat(id, msgF);
+			telegramConnector.sendToChat(id, msgF);
 		}
 		
 		//TODO: config to allow this??
@@ -115,7 +115,7 @@ public class TelegramChatPlugin extends JavaPlugin
 		data.linkedChats.put(chatID, playerUUID);
 		OfflinePlayer offlinePlayer = getServer().getOfflinePlayer(playerUUID);
 		//TODO: ensure correct thread.
-		telegramHook.sendToChat(chatID, "Success! Linked " + offlinePlayer.getName());
+		telegramConnector.sendToChat(chatID, "Success! Linked " + offlinePlayer.getName());
 	}
 
 	//TODO: Resulting token looks suspicious, check usage, rewrite
@@ -148,9 +148,9 @@ public class TelegramChatPlugin extends JavaPlugin
 		return data;
 	}
 	
-	public Telegram getTelegramHook()
+	public TelegramConnector getTelegramConnector()
 	{
-		return telegramHook;
+		return telegramConnector;
 	}
 
 	public void setToken(String token)
@@ -184,9 +184,9 @@ public class TelegramChatPlugin extends JavaPlugin
 		{
 			public void run()
 			{
-				if(telegramHook.isRegistered())
+				if(telegramConnector.isRegistered())
 				{
-					telegramHook.update();
+					telegramConnector.update();
 				}
 			}
 		}, 20L, 70L);
