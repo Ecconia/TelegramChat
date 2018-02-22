@@ -175,12 +175,6 @@ public class TelegramConnector implements UpdateHandler
 		}
 	}
 
-	public boolean isConnected()
-	{
-		//TODO: ehm nope...
-		return true;
-	}
-
 	public boolean isRegistered()
 	{
 		return name != null;
