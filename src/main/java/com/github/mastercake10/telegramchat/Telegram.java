@@ -17,39 +17,44 @@ import com.google.gson.JsonParser;
 
 public class Telegram
 {
-	private JsonObject authJson;
-	private boolean connected;
+	//Bot info:
+	private String name;
+	//Token for authentification:
 	private String token;
-
+	
 	private static int lastUpdate = 0;
 
 	private final TelegramChatPlugin plugin;
 	
-	public Telegram(TelegramChatPlugin plugin)
+	public Telegram(TelegramChatPlugin plugin, String token)
 	{
 		this.plugin = plugin;
+		this.token = token;
 	}
 	
-	public boolean auth(String token)
+	public void changeToken(String token)
 	{
+		name = null;
 		this.token = token;
-		return reconnect();
 	}
 
-	public boolean reconnect()
+	//Should only be called once, to register the bot (not every second)
+	private boolean authentificate()
 	{
 		try
 		{
-			authJson = sendGet("https://api.telegram.org/bot" + token + "/getMe");
-			plugin.getLogger().info("Established a connection with the telegram servers.");
-			connected = true;
+			JsonObject authJson = sendGet("https://api.telegram.org/bot" + token + "/getMe");
+			name = authJson.getAsJsonObject("result").get("username").getAsString();
+			
+			plugin.getLogger().info(name + " login successfully.");
+			return true;
 		}
 		catch (IOException e)
 		{
-			plugin.getLogger().warning("Sorry, but could not connect to Telegram servers. The token could be wrong.");
-			connected = false;
+			//TODO: Filter cause.
+			plugin.getLogger().warning("Something happend while attempting to login with the bot (invalid token, no connection).");
+			return false;
 		}
-		return connected;
 	}
 
 	public boolean getUpdate()
@@ -208,10 +213,9 @@ public class Telegram
 		}
 		catch (Exception e)
 		{
-			reconnect();
+			//TODO: validate login
 			plugin.getLogger().warning("Disconnected from Telegram, reconnect...");
 		}
-
 	}
 
 	public JsonObject sendGet(String urlString) throws IOException
@@ -232,13 +236,13 @@ public class Telegram
 		return new JsonParser().parse(content).getAsJsonObject();
 	}
 
-	public JsonObject getAuthJson()
+	public boolean isRegistered()
 	{
-		return authJson;
+		return name != null;
 	}
 	
-	public boolean isConnected()
+	public String getName()
 	{
-		return connected;
+		return name;
 	}
 }
