@@ -39,10 +39,16 @@ public class DataStorage
 			data = (Data) new Gson().fromJson((String) ois.readObject(), Data.class);
 			ois.close();
 		}
+		else
+		{
+			data = new Data();
+			save();
+		}
 	}
 	
 	public void save()
 	{
+		//TODO: Threading this?
 		try
 		{
 			FileOutputStream fout = new FileOutputStream(path);
@@ -63,26 +69,31 @@ public class DataStorage
 	public void addReceiver(int id)
 	{
 		data.receiverChatIDs.add(id);
+		save();
 	}
 	
 	public void removeReceiver(int id)
 	{
 		data.receiverChatIDs.remove(id);
+		save();
 	}
 
 	public void addSender(int userID, UUID playerUUID)
 	{
 		data.senderUserIDs.put(userID, playerUUID);
+		save();
 	}
 	
 	public void removeSender(int userID)
 	{
 		data.senderUserIDs.remove(userID);
+		save();
 	}
 	
 	public void removeSender(UUID playerUUID)
 	{
 		data.senderUserIDs.remove(playerUUID);
+		save();
 	}
 
 	public UUID getSender(int userID)
