@@ -26,7 +26,7 @@ public class Listeners implements Listener
 		{
 			return;
 		}
-		Message message = new Message("`" + event.getPlayer().getName() + " joined the game.`");
+		Message message = new FormattedMessage(event.getPlayer().getName() + " joined the game.");
 		plugin.getTelegramConnector().sendToAllChats(message);
 	}
 
@@ -37,7 +37,7 @@ public class Listeners implements Listener
 		{
 			return;
 		}
-		Message message = new Message("`" + event.getDeathMessage() + "`");
+		Message message = new FormattedMessage(event.getDeathMessage());
 		plugin.getTelegramConnector().sendToAllChats(message);
 	}
 
@@ -48,7 +48,7 @@ public class Listeners implements Listener
 		{
 			return;
 		}
-		Message message = new Message("`" + event.getPlayer().getName() + " left the game.`");
+		Message message = new FormattedMessage(event.getPlayer().getName() + " left the game.");
 		plugin.getTelegramConnector().sendToAllChats(message);
 	}
 
