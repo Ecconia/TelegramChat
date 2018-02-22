@@ -1,4 +1,4 @@
-chat-format: '&c[Telegram]&r %player%: %message%'
+chat-format: '&f[&bTG&f]&7 %player%&f: %message%'
 enable-joinquitmessages: true
 enable-deathmessages: true
 enable-chatmessages: true
