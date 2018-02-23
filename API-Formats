@@ -47,3 +47,7 @@ Correct token:
 }
 
 Wrong token:
+
+Server sent negative answer on sending message: 
+	400
+	Bad Request: can't parse entities: Can't find end of the entity starting at byte offset 13
