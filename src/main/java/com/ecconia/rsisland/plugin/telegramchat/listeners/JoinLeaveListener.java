@@ -22,14 +22,20 @@ public class JoinLeaveListener implements Listener
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onJoin(PlayerJoinEvent event)
 	{
-		Message message = new FormattedMessage(event.getPlayer().getName() + " joined the game.");
-		plugin.getTelegramConnector().sendToAllChats(message);
+		if(event.getJoinMessage() != null)
+		{
+			Message message = new FormattedMessage(event.getPlayer().getName() + " joined the game.");
+			plugin.getTelegramConnector().sendToAllChats(message);
+		}
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onQuit(PlayerQuitEvent event)
 	{
-		Message message = new FormattedMessage(event.getPlayer().getName() + " left the game.");
-		plugin.getTelegramConnector().sendToAllChats(message);
+		if(event.getQuitMessage() != null)
+		{
+			Message message = new FormattedMessage(event.getPlayer().getName() + " left the game.");
+			plugin.getTelegramConnector().sendToAllChats(message);
+		}
 	}
 }
