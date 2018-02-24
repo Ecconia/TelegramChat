@@ -109,20 +109,6 @@ public class TelegramChatPlugin extends JavaPlugin implements BotEvents
 	
 	//#########################################################################
 	
-	public void link(int chatID, int userID, UUID playerUUID, String token)
-	{
-		storage.addReceiver(chatID);
-		storage.addSender(userID, playerUUID);
-		
-		pendingUserTokens.remove(token);
-		
-		//TODO: Escape
-		String playername = getServer().getOfflinePlayer(playerUUID).getName();
-
-		//TODO: Change feedback message
-		telegramBot.sendToChat(new Message(chatID, "Success! Linked " + playername));
-	}
-
 	public String getNewLinkToken(UUID playerUUID)
 	{
 		String linkToken = generateLinkToken();
@@ -231,7 +217,6 @@ public class TelegramChatPlugin extends JavaPlugin implements BotEvents
 		disableTriggers();
 	}
 	
-
 	@Override
 	public void botConnected()
 	{
@@ -239,11 +224,10 @@ public class TelegramChatPlugin extends JavaPlugin implements BotEvents
 		enableTriggers();
 	}
 	
-
 	@Override
 	public void message(int userID, String chatType, int chatID, String text)
 	{
-		//plugin.getLogger().info("Telegram message; Type:" + chatType + " ChatID:" + chatID + " UserID:" + userID + " Text:" + text);
+		//getLogger().info("Telegram message; Type:" + chatType + " ChatID:" + chatID + " UserID:" + userID + " Text:\"" + text + "\"");
 
 		//TODO: other types, sendMessage - proper access.
 		//TODO: (super-)group support :)
@@ -255,30 +239,108 @@ public class TelegramChatPlugin extends JavaPlugin implements BotEvents
 			return;
 		}
 		
-		//TODO: Handle commands
+		UUID senderUUID = storage.getSender(userID);
 		
-		if (text.indexOf(' ') == -1)
+		if(text.charAt(0) == '/')
 		{
-			UUID tokenOwner = pendingUserTokens.get(text);
-			if(tokenOwner != null)
+			text = text.substring(1);
+			String parts[] = text.split(" ");
+			String command = parts[0].toLowerCase();
+			
+			if("verify".equals(command))
 			{
-				link(chatID, userID, tokenOwner, text);
-
-				return;
+				//TODO: This blocks an account from changing his MC-Account. - Fix for this.
+				if(senderUUID != null)
+				{
+					telegramBot.sendToChat(new Message(chatID, "You are already verified."));
+				}
+				else
+				{
+					if (parts.length != 2)
+					{
+						telegramBot.sendToChat(new Message(chatID, "Usage: /verify <token>"));
+					}
+					else
+					{
+						String token = parts[1];
+						UUID tokenOwner = pendingUserTokens.get(token);
+						if(tokenOwner != null)
+						{
+							//TODO: If used in a group with output-disabled this will turn the output on again.
+							storage.addReceiver(chatID);
+							storage.addSender(userID, tokenOwner);
+							
+							pendingUserTokens.remove(token);
+							
+							//TODO: Escape
+							String playername = getServer().getOfflinePlayer(tokenOwner).getName();
+							telegramBot.sendToChat(new Message(chatID, "You have been verified as " + playername));
+						}
+					}
+				}
 			}
+			else if("help".equals(command))
+			{
+				telegramBot.sendToChat(new Message(chatID, 
+						"Commands:\n"
+						+ "/verify <token> - Verify your account. (Use \"/telegram link\" on the MC-Server to get a token)\n"
+						+ "/relay <on/off>- turn on/off chat relay"));
+			}
+			else if(senderUUID == null)
+			{
+				telegramBot.sendToChat(new Message(chatID, "Please verify yourself to use bot-commands."));
+			}
+			else
+			{
+				if("relay".equals(command))
+				{
+					if (parts.length != 2 || !parts[1].toLowerCase().matches("(on|off)"))
+					{
+						telegramBot.sendToChat(new Message(chatID, "Usage: /relay <on/off>"));
+					}
+					else if(parts[1].toLowerCase().equals("on"))
+					{
+						if(storage.containsChat(chatID))
+						{
+							telegramBot.sendToChat(new Message(chatID, "Chat relay is already on."));
+						}
+						else
+						{
+							storage.addReceiver(chatID);
+							telegramBot.sendToChat(new Message(chatID, "Started chat relay."));
+						}
+					}
+					else
+					{
+						if(storage.containsChat(chatID))
+						{
+							storage.removeReceiver(chatID);
+							telegramBot.sendToChat(new Message(chatID, "Stopped chat relay."));
+						}
+						else
+						{
+							telegramBot.sendToChat(new Message(chatID, "Chat relay is already off."));
+						}
+					}
+				}
+				else
+				{
+					telegramBot.sendToChat(new Message(chatID, "Unknown command, use /help."));
+				}
+			}
+			
+			return;
 		}
 		
-		UUID senderUUID = storage.getSender(userID);
-		if(senderUUID != null)
+		if(senderUUID != null && storage.containsChat(chatID))
 		{
 			broadcastTelegramMessage(senderUUID, text, chatID);
 			return;
 		}
 		
-		//TODO: Handle no perms yet
+		//TODO: Handle no perms yet - Enhance chat settings (relay-chat=true, warn-on-missing-perms=true)
 	}
 	
-
 	@Override
 	public void chatRefusedMessage(int chatID)
 	{

@@ -106,6 +106,11 @@ public class DataStorage
 		return new HashSet<>(data.receiverChatIDs);
 	}
 	
+	public boolean containsChat(int chatID)
+	{
+		return data.receiverChatIDs.contains(chatID);
+	}
+	
 	private class Data
 	{
 		/**
