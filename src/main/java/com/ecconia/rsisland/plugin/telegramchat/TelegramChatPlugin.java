@@ -283,8 +283,8 @@ public class TelegramChatPlugin extends JavaPlugin implements BotEvents
 			{
 				telegramBot.sendToChat(new Message(chatID, 
 						"Commands:\n"
-						+ "/verify <token> - Verify your account. (Use \"/telegram link\" on the MC-Server to get a token)\n"
-						+ "/relay <on/off>- turn on/off chat relay"));
+						+ "/verify <token> - Verify your account. (Use \"/telegram link\" on the MC-Server to get a token.)\n"
+						+ "/relay <on/off> - turn on/off chat relay."));
 			}
 			else if(senderUUID == null)
 			{
