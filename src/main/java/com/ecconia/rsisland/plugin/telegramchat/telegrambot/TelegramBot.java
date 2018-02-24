@@ -1,10 +1,9 @@
 package com.ecconia.rsisland.plugin.telegramchat.telegrambot;
 
 import java.util.Set;
-import java.util.UUID;
+import java.util.logging.Logger;
 
 import com.ecconia.rsisland.plugin.telegramchat.Message;
-import com.ecconia.rsisland.plugin.telegramchat.TelegramChatPlugin;
 import com.ecconia.rsisland.plugin.telegramchat.telegrambot.exceptions.AnswerException;
 import com.ecconia.rsisland.plugin.telegramchat.telegrambot.exceptions.ConnectionException;
 import com.ecconia.rsisland.plugin.telegramchat.telegrambot.exceptions.InvalidTokenException;
@@ -15,7 +14,8 @@ public class TelegramBot implements UpdateHandler
 	private String name;
 	private String token;
 	
-	private final TelegramChatPlugin plugin;
+	private final BotEvents eventHandler;
+	private final Logger logger;
 	private final StopDebugSpam sds;
 	
 	//#########################################################################
@@ -33,71 +33,7 @@ public class TelegramBot implements UpdateHandler
 	@Override
 	public void message(int userID, String chatType, int chatID, String text)
 	{
-//		plugin.getLogger().info("Telegram message; Type:" + chatType + " ChatID:" + chatID + " UserID:" + userID + " Text:" + text);
-		
-//		if (chatType.equals("private"))
-//		{
-			//TODO: other types, sendMessage - proper access.
-			//TODO: (super-)group support :)
-			
-//			if (text != null)
-//			{
-				if (text.length() == 0)
-				{
-					plugin.getLogger().warning("Incomming text was empty.");
-					return;
-				}
-				
-//				if (text.equals("/start"))
-//				{
-//					For whom??
-//					if (plugin.getData().firstUse)
-//					{
-//						plugin.getData().firstUse = false;
-//						
-//						ChatJSON chat = new ChatJSON();
-//						chat.chat_id = chatID;
-//						chat.parse_mode = "Markdown";
-//						chat.text = "Congratulations, your bot is working! Have fun with this Plugin.";
-//						sendMessage(chat);
-//					}
-//					
-//					this.sendMessage(chatID, "You can see the chat but you can't chat at the moment. Type */linktelegram ingame* to chat!");
-//				}
-//				else 
-				if (text.indexOf(' ') == -1)
-				{
-					UUID tokenOwner = plugin.getToken(text);
-					if(tokenOwner != null)
-					{
-						plugin.link(chatID, userID, tokenOwner, text);
-
-						return;
-					}
-				}
-				
-				UUID senderUUID = plugin.getSender(userID);
-				if(senderUUID != null)
-				{
-					plugin.broadcastTelegramMessage(senderUUID, text, chatID);
-					return;
-				}
-				
-//				else
-//				{
-//					this.sendMessage(chatID, "Sorry, please link your account with */linktelegram ingame* to use the chat!");
-//				}
-//			}
-//		}
-//		else if (chatObject.get("type").getAsString().equals("group"))
-//		{
-//			int id = chatObject.get("id").getAsInt();
-//			//TODO: Set
-//			if (!plugin.getData().ids.contains(id))
-//			{
-//				plugin.getData().ids.add(id);
-//			}
-//		}
+		eventHandler.message(userID, chatType, chatID, text);
 	}
 	
 	@Override
@@ -109,35 +45,36 @@ public class TelegramBot implements UpdateHandler
 	//#########################################################################
 	
 	//TODO: authentification should be threaded!
-	public TelegramBot(TelegramChatPlugin plugin, String token)
+	public TelegramBot(BotEvents eventHandler, Logger logger, String token)
 	{
-		this.plugin = plugin;
 		this.token = token;
-		sds = new StopDebugSpam(true, plugin.getLogger());
+		this.logger = logger;
+		this.eventHandler = eventHandler;
+		sds = new StopDebugSpam(true, logger);
 		
 		try
 		{
 			authentificate();
-			plugin.getLogger().info("Logged in as " + name);
-			plugin.enableTriggers();
+			logger.info("Logged in as " + name);
+			eventHandler.botConnected();
 		}
 		catch (AnswerException e)
 		{
-			plugin.getLogger().severe("TelegramAPI refuses Token: " + e.getMessage());
+			logger.severe("TelegramAPI refuses Token: " + e.getMessage());
 		}
 		catch (ConnectionException e)
 		{
-			plugin.getLogger().severe("Error connecting to TelegramAPI: " + e.getMessage());
+			logger.severe("Error connecting to TelegramAPI: " + e.getMessage());
 		}
 		catch (InvalidTokenException e)
 		{
-			plugin.getLogger().severe("Stored token is invalid please remove it. Token >" + e.getMessage() + "<");
+			logger.severe("Stored token is invalid please remove it. Token >" + e.getMessage() + "<");
 		}
 	}
 	
 	public void changeToken(String token)
 	{
-		plugin.disableTriggers();
+		eventHandler.botDisconnected();
 		
 		this.token = token;
 		name = null;
@@ -151,7 +88,7 @@ public class TelegramBot implements UpdateHandler
 	{
 		if(token != null && token.matches("[0-9]+:[A-Za-z0-9]+"))
 		{
-			plugin.getLogger().info("Login attempt with token: >" + token + "<");
+			logger.info("Login attempt with token: >" + token + "<");
 			name = TelegramAPI.login(token);
 		}
 		else
@@ -210,6 +147,24 @@ public class TelegramBot implements UpdateHandler
 			}
 		}).start();
 	}
+	
+	public void sendToChat(Set<Integer> receiverIDs, Message message)
+	{
+		//Get the token, as long as we are in the safe mainthread.
+		String mainThreadToken = token;
+		
+		new Thread(new Runnable()
+		{
+			public void run()
+			{
+				for (int id : receiverIDs)
+				{
+					message.setChatID(id);
+					sendMessage(mainThreadToken, message);
+				}
+			}
+		}).start();
+	}
 
 	private void sendMessage(String mainThreadToken, Message message)
 	{
@@ -230,31 +185,12 @@ public class TelegramBot implements UpdateHandler
 					e.getContent().equals("Forbidden: bot was kicked from the group chat")))
 			{
 				//Remove that chat from receivers:
-				plugin.removeChat(message.getChatID());
+				eventHandler.chatRefusedMessage(message.getChatID());
 			}
 			else
 			{
 				sds.bad("Server sent negative answer on sending message: " + e.getMessage());
 			}
 		}
-	}
-
-	public void sendToAllChats(final Message message)
-	{
-		//Get the token, as long as we are in the safe mainthread.
-		String mainThreadToken = token;
-		Set<Integer> ids = plugin.getReceivingChatIDs();
-		
-		new Thread(new Runnable()
-		{
-			public void run()
-			{
-				for (int id : ids)
-				{
-					message.setChatID(id);
-					sendMessage(mainThreadToken, message);
-				}
-			}
-		}).start();
 	}
 }
