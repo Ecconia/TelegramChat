@@ -25,7 +25,7 @@ public class JoinLeaveListener implements Listener
 		if(event.getJoinMessage() != null)
 		{
 			Message message = new FormattedMessage(event.getPlayer().getName() + " joined the game.");
-			plugin.getTelegramConnector().sendToAllChats(message);
+			plugin.sendToAllReceivers(message);
 		}
 	}
 	
@@ -35,7 +35,7 @@ public class JoinLeaveListener implements Listener
 		if(event.getQuitMessage() != null)
 		{
 			Message message = new FormattedMessage(event.getPlayer().getName() + " left the game.");
-			plugin.getTelegramConnector().sendToAllChats(message);
+			plugin.sendToAllReceivers(message);
 		}
 	}
 }

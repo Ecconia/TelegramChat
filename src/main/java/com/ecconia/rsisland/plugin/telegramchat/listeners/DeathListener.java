@@ -21,7 +21,8 @@ public class DeathListener implements Listener
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onDeath(PlayerDeathEvent event)
 	{
+		//TODO: Check if canceled by other plugin
 		Message message = new FormattedMessage(event.getDeathMessage());
-		plugin.getTelegramConnector().sendToAllChats(message);
+		plugin.sendToAllReceivers(message);
 	}
 }

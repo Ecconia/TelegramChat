@@ -17,12 +17,13 @@ import org.bukkit.scheduler.BukkitTask;
 import com.ecconia.rsisland.plugin.telegramchat.listeners.ChatListener;
 import com.ecconia.rsisland.plugin.telegramchat.listeners.DeathListener;
 import com.ecconia.rsisland.plugin.telegramchat.listeners.JoinLeaveListener;
+import com.ecconia.rsisland.plugin.telegramchat.telegrambot.BotEvents;
 import com.ecconia.rsisland.plugin.telegramchat.telegrambot.TelegramBot;
 import com.google.gson.JsonSyntaxException;
 
-public class TelegramChatPlugin extends JavaPlugin
+public class TelegramChatPlugin extends JavaPlugin implements BotEvents
 {
-	private TelegramBot telegramConnector;
+	private TelegramBot telegramBot;
 	
 	private DataStorage storage;
 	private Map<String, UUID> pendingUserTokens;
@@ -63,7 +64,7 @@ public class TelegramChatPlugin extends JavaPlugin
 		
 		getCommand("telegram").setExecutor(new CommandTelegram(this));
 		
-		telegramConnector = new TelegramBot(this, getConfig().getString("token"));
+		telegramBot = new TelegramBot(this, getLogger(), getConfig().getString("token"));
 	}
 
 	@Override
@@ -72,7 +73,7 @@ public class TelegramChatPlugin extends JavaPlugin
 		pendingUserTokens = null;
 		disableTriggers();
 		storage = null;
-		telegramConnector = null;
+		telegramBot = null;
 	}
 
 	public void broadcastTelegramMessage(UUID playerUUID, String message, int senderID)
@@ -91,7 +92,7 @@ public class TelegramChatPlugin extends JavaPlugin
 		
 		for (int chatID : receivers)
 		{
-			telegramConnector.sendToChat(chatID, messageFormatted);
+			telegramBot.sendToChat(chatID, messageFormatted);
 		}
 		
 		messageFormatted = formats.getString("mc", "[TelegramChat] Please add a formatting to the plugin-config.");
@@ -105,7 +106,7 @@ public class TelegramChatPlugin extends JavaPlugin
 
 	public TelegramBot getTelegramConnector()
 	{
-		return telegramConnector;
+		return telegramBot;
 	}
 
 	public void setToken(String token)
@@ -114,9 +115,9 @@ public class TelegramChatPlugin extends JavaPlugin
 		saveConfig();
 	}
 	
-	public Set<Integer> getReceivingChatIDs()
+	public void sendToAllReceivers(Message message)
 	{
-		return storage.getReceiverCopy();
+		telegramBot.sendToChat(storage.getReceiverCopy(), message);
 	}
 	
 	//#########################################################################
@@ -132,7 +133,7 @@ public class TelegramChatPlugin extends JavaPlugin
 		String playername = getServer().getOfflinePlayer(playerUUID).getName();
 
 		//TODO: Change feedback message
-		telegramConnector.sendToChat(chatID, "Success! Linked " + playername);
+		telegramBot.sendToChat(chatID, "Success! Linked " + playername);
 	}
 
 	public String getNewLinkToken(UUID playerUUID)
@@ -202,11 +203,11 @@ public class TelegramChatPlugin extends JavaPlugin
 			public void run()
 			{
 				//TODO: find non-loop solution
-				if(telegramConnector.isRegistered())
+				if(telegramBot.isRegistered())
 				{
-					if(!telegramConnector.isUpdating())
+					if(!telegramBot.isUpdating())
 					{
-						telegramConnector.update();
+						telegramBot.update();
 					}
 				}
 			}
@@ -228,5 +229,67 @@ public class TelegramChatPlugin extends JavaPlugin
 		{
 			getServer().getPluginManager().registerEvents(new JoinLeaveListener(this), this);
 		}
+	}
+
+	
+	//#########################################################################
+	
+	@Override
+	public void botDisconnected()
+	{
+		disableTriggers();
+	}
+	
+
+	@Override
+	public void botConnected()
+	{
+		enableTriggers();
+	}
+	
+
+	@Override
+	public void message(int userID, String chatType, int chatID, String text)
+	{
+		//plugin.getLogger().info("Telegram message; Type:" + chatType + " ChatID:" + chatID + " UserID:" + userID + " Text:" + text);
+
+		//TODO: other types, sendMessage - proper access.
+		//TODO: (super-)group support :)
+			
+		if (text.length() == 0)
+		{
+			//TODO: If and when this can ever happen.
+			getLogger().warning("Incomming text was empty.");
+			return;
+		}
+		
+		//TODO: Handle commands
+		
+		if (text.indexOf(' ') == -1)
+		{
+			UUID tokenOwner = getToken(text);
+			if(tokenOwner != null)
+			{
+				link(chatID, userID, tokenOwner, text);
+
+				return;
+			}
+		}
+		
+		UUID senderUUID = getSender(userID);
+		if(senderUUID != null)
+		{
+			broadcastTelegramMessage(senderUUID, text, chatID);
+			return;
+		}
+		
+		//TODO: Handle no perms yet
+	}
+	
+
+	@Override
+	public void chatRefusedMessage(int chatID)
+	{
+		removeChat(chatID);
 	}
 }

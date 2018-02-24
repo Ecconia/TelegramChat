@@ -27,7 +27,7 @@ public class ChatListener implements Listener
 			String content = escape(event.getMessage()).replaceAll(ChatColor.COLOR_CHAR + ".", "");
 			
 			Message message = new Message("*" + playername + "*: " + content);
-			plugin.getTelegramConnector().sendToAllChats(message);
+			plugin.sendToAllReceivers(message);
 		}
 	}
 	
