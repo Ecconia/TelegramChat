@@ -9,6 +9,7 @@ import com.ecconia.rsisland.plugin.telegramchat.telegrambot.exceptions.Connectio
 import com.ecconia.rsisland.plugin.telegramchat.telegrambot.exceptions.InvalidTokenException;
 import com.google.gson.Gson;
 
+//TODO: Switch from polling to webhook
 public class TelegramBot implements UpdateHandler
 {
 	private String name;
@@ -21,7 +22,6 @@ public class TelegramBot implements UpdateHandler
 	//#########################################################################
 	
 	private int updateCounter;
-	
 	private boolean updating;
 	
 	@Override
@@ -130,7 +130,6 @@ public class TelegramBot implements UpdateHandler
 	
 	public void sendToChat(Message message)
 	{
-		//Move on a thread too, since it may freeze (and it did in the past) the server.
 		String mainThreadToken = token;
 		new Thread(new Runnable()
 		{

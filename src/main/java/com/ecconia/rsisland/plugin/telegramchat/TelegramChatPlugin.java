@@ -203,7 +203,6 @@ public class TelegramChatPlugin extends JavaPlugin implements BotEvents
 		}
 	}
 
-	
 	//#########################################################################
 
 	public String getBotName()
