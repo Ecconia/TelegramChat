@@ -14,9 +14,9 @@ import com.ecconia.rsisland.plugin.telegramchat.telegrambot.exceptions.InvalidTo
 //TODO: oops add permission check again.
 public class CommandTelegram implements CommandExecutor
 {
-	private final TelegramChatPlugin plugin;
+	private final TelegramPlugin plugin;
 	
-	public CommandTelegram(TelegramChatPlugin plugin)
+	public CommandTelegram(TelegramPlugin plugin)
 	{
 		this.plugin = plugin;
 	}

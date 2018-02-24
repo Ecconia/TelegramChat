@@ -7,13 +7,13 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 
 import com.ecconia.rsisland.plugin.telegramchat.FormattedMessage;
 import com.ecconia.rsisland.plugin.telegramchat.Message;
-import com.ecconia.rsisland.plugin.telegramchat.TelegramChatPlugin;
+import com.ecconia.rsisland.plugin.telegramchat.TelegramPlugin;
 
 public class DeathListener implements Listener
 {
-	private final TelegramChatPlugin plugin;
+	private final TelegramPlugin plugin;
 	
-	public DeathListener(TelegramChatPlugin plugin)
+	public DeathListener(TelegramPlugin plugin)
 	{
 		this.plugin = plugin;
 	}

@@ -7,13 +7,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import com.ecconia.rsisland.plugin.telegramchat.Message;
-import com.ecconia.rsisland.plugin.telegramchat.TelegramChatPlugin;
+import com.ecconia.rsisland.plugin.telegramchat.TelegramPlugin;
 
 public class ChatListener implements Listener
 {
-	private final TelegramChatPlugin plugin;
+	private final TelegramPlugin plugin;
 	
-	public ChatListener(TelegramChatPlugin plugin)
+	public ChatListener(TelegramPlugin plugin)
 	{
 		this.plugin = plugin;
 	}
@@ -25,7 +25,7 @@ public class ChatListener implements Listener
 		{
 			String playername = event.getPlayer().getName();
 			//TODO: Config to enable formatting
-			String content = TelegramChatPlugin.escape(event.getMessage().replaceAll(ChatColor.COLOR_CHAR + ".", ""));
+			String content = TelegramPlugin.escape(event.getMessage().replaceAll(ChatColor.COLOR_CHAR + ".", ""));
 			
 			Message message = new Message("*" + playername + "*: " + content);
 			plugin.sendToAllReceivers(message);

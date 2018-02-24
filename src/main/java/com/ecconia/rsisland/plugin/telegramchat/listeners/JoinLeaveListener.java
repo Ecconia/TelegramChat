@@ -8,13 +8,13 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.ecconia.rsisland.plugin.telegramchat.FormattedMessage;
 import com.ecconia.rsisland.plugin.telegramchat.Message;
-import com.ecconia.rsisland.plugin.telegramchat.TelegramChatPlugin;
+import com.ecconia.rsisland.plugin.telegramchat.TelegramPlugin;
 
 public class JoinLeaveListener implements Listener
 {
-	private final TelegramChatPlugin plugin;
+	private final TelegramPlugin plugin;
 	
-	public JoinLeaveListener(TelegramChatPlugin plugin)
+	public JoinLeaveListener(TelegramPlugin plugin)
 	{
 		this.plugin = plugin;
 	}

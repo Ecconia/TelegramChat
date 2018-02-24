@@ -1,4 +1,4 @@
-## TelegramChat - Bukkit plugin
+## TelegramPlugin - Bukkit plugin
 Connect your server chat with Telegram using this plugin.
 
 Rewrite of TelegramChat by Linus122. Summary of changes:
@@ -12,7 +12,7 @@ Rewrite of TelegramChat by Linus122. Summary of changes:
 #### Usage:
 - Clone this repo
 - Compile with `mvn install`
-- Copy plugin from target/TelegramChat-<version>.jar into your Bukkit-plugins folder.
+- Copy plugin from target/TelegramPlugin-<version>.jar into your Bukkit-plugins folder.
 - Add Telegram-Bot token into the config.yml
 
 #### Create a Telegram Bot:

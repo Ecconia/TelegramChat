@@ -1,5 +1,5 @@
 name: ${artifactId}
-main: ${groupId}.${artifactId}Plugin
+main: ${groupId}.${artifactId}
 version: ${version}
 
 authors: [Ecconia, Linus122]

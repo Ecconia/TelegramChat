@@ -21,8 +21,10 @@ import com.ecconia.rsisland.plugin.telegramchat.telegrambot.BotEvents;
 import com.ecconia.rsisland.plugin.telegramchat.telegrambot.TelegramBot;
 import com.google.gson.JsonSyntaxException;
 
-public class TelegramChatPlugin extends JavaPlugin implements BotEvents
+public class TelegramPlugin extends JavaPlugin implements BotEvents
 {
+	public static final String prefix = ChatColor.WHITE + "[" + ChatColor.AQUA + "Telegram" + ChatColor.WHITE + "] ";
+	
 	private TelegramBot telegramBot;
 	private boolean botRegistered;
 	
