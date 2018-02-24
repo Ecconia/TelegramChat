@@ -2,8 +2,8 @@ name: ${artifactId}
 main: ${groupId}.${artifactId}Plugin
 version: ${version}
 
-authors: [Linus122, Ecconia]
-description: Connect Telegram with your server chat!
+authors: [Ecconia, Linus122]
+description: Connects Telegram with your server chat.
 
 commands:
    telegram:
