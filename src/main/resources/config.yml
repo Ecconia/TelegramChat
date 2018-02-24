@@ -1,6 +1,8 @@
 format:
   mc: '&f[&bTG&f]&7 %player%&f: %message%'
   telegram: '[TG] *%player%*: %message%'
+  telegram-escape-player: false
+  telegram-escape-message: true
 
 messages:
   join-leave: true

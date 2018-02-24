@@ -35,6 +35,15 @@ public class TelegramChatPlugin extends JavaPlugin implements BotEvents
 	public void onEnable()
 	{
 		saveDefaultConfig();
+		//Ensure that config values are set.
+		getConfig().addDefault("format.mc", "&f[&bTG&f]&7 %player%&f: %message%");
+		getConfig().addDefault("format.telegram", "[TG] *%player%*: %message%");
+		getConfig().addDefault("format.telegram-escape-player", false);
+		getConfig().addDefault("format.telegram-escape-message", true);
+		getConfig().addDefault("messages.join-leave", true);
+		getConfig().addDefault("messages.death", true);
+		getConfig().addDefault("messages.chat", true);
+		
 		pendingUserTokens = new HashMap<>();
 
 		try
@@ -81,19 +90,22 @@ public class TelegramChatPlugin extends JavaPlugin implements BotEvents
 	{
 		//TODO: Escape..
 		String playerName = getServer().getOfflinePlayer(playerUUID).getName();
-		
-		Set<Integer> receivers = storage.getReceiverCopy();
-		receivers.remove(senderID);
-		
 		ConfigurationSection formats = (ConfigurationSection) getConfig().get("format");
 
-		String messageFormatted = formats.getString("telegram", "Please add a formatting to the plugin-config.");
-		messageFormatted = messageFormatted.replace("%player%", playerName);
-		messageFormatted = messageFormatted.replace("%message%", message);
+		{
+			Set<Integer> receivers = storage.getReceiverCopy();
+			receivers.remove(senderID);
+			
+			String messageFormatted = formats.getString("telegram");
+			String escapedPlayername = formats.getBoolean("telegram-escape-player") ? escape(playerName) : playerName;
+			messageFormatted = messageFormatted.replace("%player%", escapedPlayername);
+			String escapedMessage = formats.getBoolean("telegram-escape-message") ? escape(message) : message;
+			messageFormatted = messageFormatted.replace("%message%", escapedMessage);
+			
+			telegramBot.sendToChat(receivers, new Message(messageFormatted));
+		}
 		
-		telegramBot.sendToChat(receivers, new Message(messageFormatted));
-		
-		messageFormatted = formats.getString("mc", "[TelegramChat] Please add a formatting to the plugin-config.");
+		String messageFormatted = formats.getString("mc");
 		messageFormatted = messageFormatted.replace('&', ChatColor.COLOR_CHAR);
 		messageFormatted = messageFormatted.replace("%player%", playerName);
 		messageFormatted = messageFormatted.replace("%message%", message);
@@ -206,6 +218,14 @@ public class TelegramChatPlugin extends JavaPlugin implements BotEvents
 		getConfig().set("token", token);
 		saveConfig();
 		telegramBot.changeToken(token);
+	}
+	
+	public static String escape(String str)
+	{
+		//TODO: investigate this commit: https://github.com/jpsheehan/TelegramChat17/commit/fecfe30bcb24e8e352fd761a35898ba936265bed
+		str = str.replace("_", "\\_");
+		str = str.replace("*", "\\*");
+		return str;
 	}
 	
 	//#########################################################################
