@@ -24,6 +24,7 @@ import com.google.gson.JsonSyntaxException;
 public class TelegramChatPlugin extends JavaPlugin implements BotEvents
 {
 	private TelegramBot telegramBot;
+	private boolean botRegistered;
 	
 	private DataStorage storage;
 	private Map<String, UUID> pendingUserTokens;
@@ -90,10 +91,7 @@ public class TelegramChatPlugin extends JavaPlugin implements BotEvents
 		messageFormatted = messageFormatted.replace("%player%", playerName);
 		messageFormatted = messageFormatted.replace("%message%", message);
 		
-		for (int chatID : receivers)
-		{
-			telegramBot.sendToChat(chatID, messageFormatted);
-		}
+		telegramBot.sendToChat(receivers, new Message(messageFormatted));
 		
 		messageFormatted = formats.getString("mc", "[TelegramChat] Please add a formatting to the plugin-config.");
 		messageFormatted = messageFormatted.replace('&', ChatColor.COLOR_CHAR);
@@ -104,17 +102,6 @@ public class TelegramChatPlugin extends JavaPlugin implements BotEvents
 		getServer().broadcastMessage(messageFormatted);//.replace('&', ChatColor.COLOR_CHAR));
 	}
 
-	public TelegramBot getTelegramConnector()
-	{
-		return telegramBot;
-	}
-
-	public void setToken(String token)
-	{
-		getConfig().set("token", token);
-		saveConfig();
-	}
-	
 	public void sendToAllReceivers(Message message)
 	{
 		telegramBot.sendToChat(storage.getReceiverCopy(), message);
@@ -133,7 +120,7 @@ public class TelegramChatPlugin extends JavaPlugin implements BotEvents
 		String playername = getServer().getOfflinePlayer(playerUUID).getName();
 
 		//TODO: Change feedback message
-		telegramBot.sendToChat(chatID, "Success! Linked " + playername);
+		telegramBot.sendToChat(new Message(chatID, "Success! Linked " + playername));
 	}
 
 	public String getNewLinkToken(UUID playerUUID)
@@ -168,21 +155,6 @@ public class TelegramChatPlugin extends JavaPlugin implements BotEvents
 		return finalToken;
 	}
 	
-	public UUID getToken(String token)
-	{
-		return pendingUserTokens.get(token);
-	}
-	
-	public UUID getSender(int userID)
-	{
-		return storage.getSender(userID);
-	}
-	
-	public void removeChat(int chatID)
-	{
-		storage.removeReceiver(chatID);
-	}
-	
 	//#########################################################################
 	
 	public void disableTriggers()
@@ -203,7 +175,7 @@ public class TelegramChatPlugin extends JavaPlugin implements BotEvents
 			public void run()
 			{
 				//TODO: find non-loop solution
-				if(telegramBot.isRegistered())
+				if(botRegistered)
 				{
 					if(!telegramBot.isUpdating())
 					{
@@ -233,10 +205,30 @@ public class TelegramChatPlugin extends JavaPlugin implements BotEvents
 
 	
 	//#########################################################################
+
+	public String getBotName()
+	{
+		return telegramBot.getBotName();
+	}
 	
+	public boolean isRegistered()
+	{
+		return botRegistered;
+	}
+	
+	public void setToken(String token)
+	{
+		getConfig().set("token", token);
+		saveConfig();
+		telegramBot.changeToken(token);
+	}
+	
+	//#########################################################################
+
 	@Override
 	public void botDisconnected()
 	{
+		botRegistered = false;
 		disableTriggers();
 	}
 	
@@ -244,6 +236,7 @@ public class TelegramChatPlugin extends JavaPlugin implements BotEvents
 	@Override
 	public void botConnected()
 	{
+		botRegistered = true;
 		enableTriggers();
 	}
 	
@@ -267,7 +260,7 @@ public class TelegramChatPlugin extends JavaPlugin implements BotEvents
 		
 		if (text.indexOf(' ') == -1)
 		{
-			UUID tokenOwner = getToken(text);
+			UUID tokenOwner = pendingUserTokens.get(text);
 			if(tokenOwner != null)
 			{
 				link(chatID, userID, tokenOwner, text);
@@ -276,7 +269,7 @@ public class TelegramChatPlugin extends JavaPlugin implements BotEvents
 			}
 		}
 		
-		UUID senderUUID = getSender(userID);
+		UUID senderUUID = storage.getSender(userID);
 		if(senderUUID != null)
 		{
 			broadcastTelegramMessage(senderUUID, text, chatID);
@@ -290,6 +283,6 @@ public class TelegramChatPlugin extends JavaPlugin implements BotEvents
 	@Override
 	public void chatRefusedMessage(int chatID)
 	{
-		removeChat(chatID);
+		storage.removeReceiver(chatID);
 	}
 }

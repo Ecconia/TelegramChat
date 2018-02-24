@@ -53,21 +53,18 @@ public class CommandTelegram implements CommandExecutor
 					return true;
 				}
 				
-				if (!plugin.getTelegramConnector().isRegistered())
+				if (!plugin.isRegistered())
 				{
 					sender.sendMessage(ChatColor.RED + "Please register a bot for this server first.");
 					return true;
 				}
 
-				//TODO:
-				//Check if registered:
-				
-				
+				//TODO: Check if registered:
 				
 				//Get and print new token:
 				String token = plugin.getNewLinkToken(((Player) sender).getUniqueId());
 				
-				sender.sendMessage(ChatColor.GREEN + "Add @" + plugin.getTelegramConnector().getName() + " to Telegram and send following token to it: " + token);
+				sender.sendMessage(ChatColor.GREEN + "Add @" + plugin.getBotName() + " to Telegram and send following token to it: " + token);
 				return true;
 			}
 			else if("bot".equals(subcommand))
@@ -85,16 +82,14 @@ public class CommandTelegram implements CommandExecutor
 				}
 				String token = args[1];
 				
-				plugin.setToken(token);
-				
 				try
 				{
-					plugin.getTelegramConnector().changeToken(token);
-					plugin.getLogger().info("Logged in as " + plugin.getTelegramConnector().getName());
+					plugin.setToken(token);
+					plugin.getLogger().info("Logged in as " + plugin.getBotName());
 					plugin.enableTriggers();
 					
 					sender.sendMessage(ChatColor.GREEN + "Successfully connected to Telegram!");
-					sender.sendMessage(ChatColor.GREEN + "Add " + plugin.getTelegramConnector().getName() + " to Telegram!");
+					sender.sendMessage(ChatColor.GREEN + "Add " + plugin.getBotName() + " to Telegram!");
 				}
 				catch (AnswerException e)
 				{

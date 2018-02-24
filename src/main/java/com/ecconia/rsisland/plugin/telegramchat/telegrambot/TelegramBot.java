@@ -116,12 +116,7 @@ public class TelegramBot implements UpdateHandler
 		}
 	}
 
-	public boolean isRegistered()
-	{
-		return name != null;
-	}
-	
-	public String getName()
+	public String getBotName()
 	{
 		return name;
 	}
@@ -133,10 +128,8 @@ public class TelegramBot implements UpdateHandler
 
 	//#########################################################################
 	
-	public void sendToChat(int chatID, String content)
+	public void sendToChat(Message message)
 	{
-		Message message = new Message(chatID, content);
-		
 		//Move on a thread too, since it may freeze (and it did in the past) the server.
 		String mainThreadToken = token;
 		new Thread(new Runnable()
