@@ -6,9 +6,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.ecconia.rsisland.plugin.telegramchat.http.ConnectionException;
-import com.ecconia.rsisland.plugin.telegramchat.telegram.InvalidTokenException;
-import com.ecconia.rsisland.plugin.telegramchat.telegramapi.AnswerException;
+import com.ecconia.rsisland.plugin.telegramchat.telegrambot.exceptions.AnswerException;
+import com.ecconia.rsisland.plugin.telegramchat.telegrambot.exceptions.ConnectionException;
+import com.ecconia.rsisland.plugin.telegramchat.telegrambot.exceptions.InvalidTokenException;
 
 //TODO: reload, status
 //TODO: oops add permission check again.

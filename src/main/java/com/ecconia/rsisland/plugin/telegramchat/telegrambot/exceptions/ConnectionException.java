@@ -1,4 +1,4 @@
-package com.ecconia.rsisland.plugin.telegramchat.http;
+package com.ecconia.rsisland.plugin.telegramchat.telegrambot.exceptions;
 
 @SuppressWarnings("serial")
 public class ConnectionException extends RuntimeException

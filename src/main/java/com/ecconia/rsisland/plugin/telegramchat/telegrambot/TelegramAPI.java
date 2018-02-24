@@ -1,7 +1,8 @@
-package com.ecconia.rsisland.plugin.telegramchat.telegramapi;
+package com.ecconia.rsisland.plugin.telegramchat.telegrambot;
 
-import com.ecconia.rsisland.plugin.telegramchat.http.Connection;
-import com.ecconia.rsisland.plugin.telegramchat.http.Result;
+import com.ecconia.rsisland.plugin.telegramchat.telegrambot.exceptions.AnswerException;
+import com.ecconia.rsisland.plugin.telegramchat.telegrambot.net.Connection;
+import com.ecconia.rsisland.plugin.telegramchat.telegrambot.net.Result;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

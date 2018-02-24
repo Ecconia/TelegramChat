@@ -17,12 +17,12 @@ import org.bukkit.scheduler.BukkitTask;
 import com.ecconia.rsisland.plugin.telegramchat.listeners.ChatListener;
 import com.ecconia.rsisland.plugin.telegramchat.listeners.DeathListener;
 import com.ecconia.rsisland.plugin.telegramchat.listeners.JoinLeaveListener;
-import com.ecconia.rsisland.plugin.telegramchat.telegram.TelegramConnector;
+import com.ecconia.rsisland.plugin.telegramchat.telegrambot.TelegramBot;
 import com.google.gson.JsonSyntaxException;
 
 public class TelegramChatPlugin extends JavaPlugin
 {
-	private TelegramConnector telegramConnector;
+	private TelegramBot telegramConnector;
 	
 	private DataStorage storage;
 	private Map<String, UUID> pendingUserTokens;
@@ -63,7 +63,7 @@ public class TelegramChatPlugin extends JavaPlugin
 		
 		getCommand("telegram").setExecutor(new CommandTelegram(this));
 		
-		telegramConnector = new TelegramConnector(this, getConfig().getString("token"));
+		telegramConnector = new TelegramBot(this, getConfig().getString("token"));
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class TelegramChatPlugin extends JavaPlugin
 		getServer().broadcastMessage(messageFormatted);//.replace('&', ChatColor.COLOR_CHAR));
 	}
 
-	public TelegramConnector getTelegramConnector()
+	public TelegramBot getTelegramConnector()
 	{
 		return telegramConnector;
 	}

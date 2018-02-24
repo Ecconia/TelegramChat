@@ -1,4 +1,4 @@
-package com.ecconia.rsisland.plugin.telegramchat.http;
+package com.ecconia.rsisland.plugin.telegramchat.telegrambot.net;
 
 public class Result
 {

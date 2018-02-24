@@ -1,4 +1,4 @@
-package com.ecconia.rsisland.plugin.telegramchat.http;
+package com.ecconia.rsisland.plugin.telegramchat.telegrambot.net;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -12,6 +12,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+
+import com.ecconia.rsisland.plugin.telegramchat.telegrambot.exceptions.ConnectionException;
 
 public class Connection
 {

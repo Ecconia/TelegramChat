@@ -1,4 +1,4 @@
-package com.ecconia.rsisland.plugin.telegramchat.telegramapi;
+package com.ecconia.rsisland.plugin.telegramchat.telegrambot.exceptions;
 
 import com.google.gson.JsonObject;
 

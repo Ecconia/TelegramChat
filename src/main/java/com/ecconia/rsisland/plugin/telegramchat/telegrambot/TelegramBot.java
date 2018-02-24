@@ -1,17 +1,16 @@
-package com.ecconia.rsisland.plugin.telegramchat.telegram;
+package com.ecconia.rsisland.plugin.telegramchat.telegrambot;
 
 import java.util.Set;
 import java.util.UUID;
 
 import com.ecconia.rsisland.plugin.telegramchat.Message;
 import com.ecconia.rsisland.plugin.telegramchat.TelegramChatPlugin;
-import com.ecconia.rsisland.plugin.telegramchat.http.ConnectionException;
-import com.ecconia.rsisland.plugin.telegramchat.telegramapi.AnswerException;
-import com.ecconia.rsisland.plugin.telegramchat.telegramapi.TelegramAPI;
-import com.ecconia.rsisland.plugin.telegramchat.telegramapi.UpdateHandler;
+import com.ecconia.rsisland.plugin.telegramchat.telegrambot.exceptions.AnswerException;
+import com.ecconia.rsisland.plugin.telegramchat.telegrambot.exceptions.ConnectionException;
+import com.ecconia.rsisland.plugin.telegramchat.telegrambot.exceptions.InvalidTokenException;
 import com.google.gson.Gson;
 
-public class TelegramConnector implements UpdateHandler
+public class TelegramBot implements UpdateHandler
 {
 	private String name;
 	private String token;
@@ -110,7 +109,7 @@ public class TelegramConnector implements UpdateHandler
 	//#########################################################################
 	
 	//TODO: authentification should be threaded!
-	public TelegramConnector(TelegramChatPlugin plugin, String token)
+	public TelegramBot(TelegramChatPlugin plugin, String token)
 	{
 		this.plugin = plugin;
 		this.token = token;

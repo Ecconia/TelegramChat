@@ -1,4 +1,4 @@
-package com.ecconia.rsisland.plugin.telegramchat.telegram;
+package com.ecconia.rsisland.plugin.telegramchat.telegrambot;
 
 import java.util.logging.Logger;
 
