@@ -252,6 +252,13 @@ public class TelegramPlugin extends JavaPlugin implements BotEvents
 		return telegramBot.isGoodConnection();
 	}
 	
+	public void reload()
+	{
+		//Err is this a good idea - at least it seems like it does what it should.
+		onDisable();
+		onEnable();
+	}
+	
 	//#########################################################################
 
 	@Override
@@ -390,4 +397,5 @@ public class TelegramPlugin extends JavaPlugin implements BotEvents
 	{
 		storage.removeReceiver(chatID);
 	}
+
 }

@@ -18,6 +18,9 @@ private final TelegramPlugin plugin;
 	@Override
 	public void exec(CommandSender sender, String[] args)
 	{
+		checkPermission(sender);
 		
+		plugin.reload();
+		f.n(sender, "Reload done. Please check console for details.");
 	}
 }
