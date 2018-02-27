@@ -7,6 +7,4 @@ description: Connects Telegram with your server chat.
 
 commands:
    telegram:
-      description: Register the bot or link your account
-      usage: '§cUsage: /<command> <bot|link>'
-      permission: telegram.setbot;telegram.link
+      description: Register bot-token, link account, reload plugin, check connection.

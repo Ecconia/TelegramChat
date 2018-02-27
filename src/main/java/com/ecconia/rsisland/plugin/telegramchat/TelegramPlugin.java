@@ -74,7 +74,12 @@ public class TelegramPlugin extends JavaPlugin implements BotEvents
 			return;
 		}
 		
-		getCommand("telegram").setExecutor(new CommandTelegram(this));
+		new CommandHandler(this, new Feedback(prefix), new GroupSubcommand("telegram"
+			,new CommandLink(this)
+			,new CommandReload(this)
+			,new CommandStatus(this)
+			,new CommandToken(this)
+		));
 		
 		telegramBot = new TelegramBot(this, getLogger(), getConfig().getString("token"));
 	}
