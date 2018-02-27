@@ -111,6 +111,12 @@ public class DataStorage
 		return data.receiverChatIDs.contains(chatID);
 	}
 	
+	public boolean containsSender(UUID uuid)
+	{
+		//TODO: Put them in a hashset too.
+		return data.senderUserIDs.containsValue(uuid);
+	}
+	
 	private class Data
 	{
 		/**

@@ -14,6 +14,13 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
+import com.ecconia.rsisland.framework.cofami.CommandHandler;
+import com.ecconia.rsisland.framework.cofami.Feedback;
+import com.ecconia.rsisland.framework.cofami.GroupSubcommand;
+import com.ecconia.rsisland.plugin.telegramchat.commands.CommandLink;
+import com.ecconia.rsisland.plugin.telegramchat.commands.CommandReload;
+import com.ecconia.rsisland.plugin.telegramchat.commands.CommandStatus;
+import com.ecconia.rsisland.plugin.telegramchat.commands.CommandToken;
 import com.ecconia.rsisland.plugin.telegramchat.listeners.ChatListener;
 import com.ecconia.rsisland.plugin.telegramchat.listeners.DeathListener;
 import com.ecconia.rsisland.plugin.telegramchat.listeners.JoinLeaveListener;
@@ -235,6 +242,11 @@ public class TelegramPlugin extends JavaPlugin implements BotEvents
 		return str;
 	}
 	
+	public boolean isPlayerValidated(UUID uuid)
+	{
+		return storage.containsSender(uuid);
+	}
+
 	//#########################################################################
 
 	@Override
