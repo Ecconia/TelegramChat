@@ -247,6 +247,11 @@ public class TelegramPlugin extends JavaPlugin implements BotEvents
 		return storage.containsSender(uuid);
 	}
 
+	public boolean isGoodConnection()
+	{
+		return telegramBot.isGoodConnection();
+	}
+	
 	//#########################################################################
 
 	@Override

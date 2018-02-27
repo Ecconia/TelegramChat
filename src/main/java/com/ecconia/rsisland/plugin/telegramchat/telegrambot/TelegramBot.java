@@ -126,6 +126,11 @@ public class TelegramBot implements UpdateHandler
 		return updating;
 	}
 
+	public boolean isGoodConnection()
+	{
+		return sds.isGood();
+	}
+
 	//#########################################################################
 	
 	public void sendToChat(Message message)

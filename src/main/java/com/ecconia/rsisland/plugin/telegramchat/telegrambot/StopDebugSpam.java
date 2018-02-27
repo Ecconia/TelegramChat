@@ -46,4 +46,9 @@ public class StopDebugSpam
 		}
 		goodState = false;
 	}
+
+	public boolean isGood()
+	{
+		return goodState;
+	}
 }
