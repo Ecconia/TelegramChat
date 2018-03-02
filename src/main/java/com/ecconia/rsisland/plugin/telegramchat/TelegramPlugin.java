@@ -239,6 +239,7 @@ public class TelegramPlugin extends JavaPlugin implements BotEvents
 		//TODO: investigate this commit: https://github.com/jpsheehan/TelegramChat17/commit/fecfe30bcb24e8e352fd761a35898ba936265bed
 		str = str.replace("_", "\\_");
 		str = str.replace("*", "\\*");
+		str = str.replace("`", "\\`");
 		return str;
 	}
 	
