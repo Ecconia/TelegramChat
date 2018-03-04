@@ -22,7 +22,7 @@ public class BroadcastListener implements Listener
 	public void onBroadcast(BroadcastMessageEvent event)
 	{
 		//Maybe test for size: event.getRecipients().size() == plugin.getServer().getOnlinePlayers().size()
-		if(!event.isCancelled())
+		if(!plugin.isBroadcasting() && !event.isCancelled())
 		{
 			//TODO: Config to enable formatting
 			String content = TelegramPlugin.escape(event.getMessage().replaceAll(ChatColor.COLOR_CHAR + ".", ""));

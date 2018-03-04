@@ -35,6 +35,7 @@ public class TelegramPlugin extends JavaPlugin implements BotEvents
 	
 	private TelegramBot telegramBot;
 	private boolean botRegistered;
+	private boolean isBroadcasting;
 	
 	private DataStorage storage;
 	private Map<String, UUID> pendingUserTokens;
@@ -127,7 +128,9 @@ public class TelegramPlugin extends JavaPlugin implements BotEvents
 		messageFormatted = messageFormatted.replace("%message%", message);
 		
 		//TODO: config to allow this?? -> default no.
+		isBroadcasting = true;
 		getServer().broadcastMessage(messageFormatted);//.replace('&', ChatColor.COLOR_CHAR));
+		isBroadcasting = false;
 	}
 
 	public void sendToAllReceivers(Message message)
@@ -405,4 +408,8 @@ public class TelegramPlugin extends JavaPlugin implements BotEvents
 		storage.removeReceiver(chatID);
 	}
 
+	public boolean isBroadcasting()
+	{
+		return isBroadcasting;
+	}
 }
