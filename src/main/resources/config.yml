@@ -8,4 +8,5 @@ messages:
   join-leave: true
   death: true
   chat: true
+  broadcast: true
 token: ''

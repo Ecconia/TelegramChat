@@ -21,6 +21,7 @@ import com.ecconia.rsisland.plugin.telegramchat.commands.CommandLink;
 import com.ecconia.rsisland.plugin.telegramchat.commands.CommandReload;
 import com.ecconia.rsisland.plugin.telegramchat.commands.CommandStatus;
 import com.ecconia.rsisland.plugin.telegramchat.commands.CommandToken;
+import com.ecconia.rsisland.plugin.telegramchat.listeners.BroadcastListener;
 import com.ecconia.rsisland.plugin.telegramchat.listeners.ChatListener;
 import com.ecconia.rsisland.plugin.telegramchat.listeners.DeathListener;
 import com.ecconia.rsisland.plugin.telegramchat.listeners.JoinLeaveListener;
@@ -52,6 +53,7 @@ public class TelegramPlugin extends JavaPlugin implements BotEvents
 		getConfig().addDefault("messages.join-leave", true);
 		getConfig().addDefault("messages.death", true);
 		getConfig().addDefault("messages.chat", true);
+		getConfig().addDefault("messages.broadcast", true);
 		
 		pendingUserTokens = new HashMap<>();
 
@@ -212,6 +214,10 @@ public class TelegramPlugin extends JavaPlugin implements BotEvents
 		if (messages.getBoolean("join-leave"))
 		{
 			getServer().getPluginManager().registerEvents(new JoinLeaveListener(this), this);
+		}
+		if(messages.getBoolean("broadcast"))
+		{
+			getServer().getPluginManager().registerEvents(new BroadcastListener(this), this);
 		}
 	}
 
