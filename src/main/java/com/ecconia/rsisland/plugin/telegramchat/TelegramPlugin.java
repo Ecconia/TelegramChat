@@ -48,8 +48,7 @@ public class TelegramPlugin extends JavaPlugin implements BotEvents
 		saveDefaultConfig();
 		//Ensure that config values are set.
 		getConfig().addDefault("format.mc", "&f[&bTG&f]&7 %player%&f: %message%");
-		getConfig().addDefault("format.telegram", "[TG] *%player%*: %message%");
-		getConfig().addDefault("format.telegram-escape-player", false);
+		getConfig().addDefault("format.telegram", "[TG] <b>%player%</b>: %message%");
 		getConfig().addDefault("format.telegram-escape-message", true);
 		getConfig().addDefault("messages.join-leave", true);
 		getConfig().addDefault("messages.death", true);
@@ -114,8 +113,7 @@ public class TelegramPlugin extends JavaPlugin implements BotEvents
 			receivers.remove(senderID);
 			
 			String messageFormatted = formats.getString("telegram");
-			String escapedPlayername = formats.getBoolean("telegram-escape-player") ? escape(playerName) : playerName;
-			messageFormatted = messageFormatted.replace("%player%", escapedPlayername);
+			messageFormatted = messageFormatted.replace("%player%", playerName);
 			String escapedMessage = formats.getBoolean("telegram-escape-message") ? escape(message) : message;
 			messageFormatted = messageFormatted.replace("%message%", escapedMessage);
 			
@@ -245,10 +243,9 @@ public class TelegramPlugin extends JavaPlugin implements BotEvents
 	
 	public static String escape(String str)
 	{
-		//TODO: investigate this commit: https://github.com/jpsheehan/TelegramChat17/commit/fecfe30bcb24e8e352fd761a35898ba936265bed
-		str = str.replace("_", "\\_");
-		str = str.replace("*", "\\*");
-		str = str.replace("`", "\\`");
+		str = str.replace("&", "&amp;");
+		str = str.replace("<", "&lt;");
+		str = str.replace(">", "&gt;");
 		return str;
 	}
 	
@@ -343,9 +340,9 @@ public class TelegramPlugin extends JavaPlugin implements BotEvents
 			else if("help".equals(command))
 			{
 				telegramBot.sendToChat(new Message(chatID, 
-						"Commands:\n"
+						escape("Commands:\n"
 						+ "/verify <token> - Verify your account. (Use \"/telegram link\" on the MC-Server to get a token.)\n"
-						+ "/relay <on/off> - turn on/off chat relay."));
+						+ "/relay <on/off> - turn on/off chat relay.")));
 			}
 			else if(senderUUID == null)
 			{
@@ -357,7 +354,7 @@ public class TelegramPlugin extends JavaPlugin implements BotEvents
 				{
 					if (parts.length != 2 || !parts[1].toLowerCase().matches("(on|off)"))
 					{
-						telegramBot.sendToChat(new Message(chatID, "Usage: /relay <on/off>"));
+						telegramBot.sendToChat(new Message(chatID, escape("Usage: /relay <on/off>")));
 					}
 					else if(parts[1].toLowerCase().equals("on"))
 					{

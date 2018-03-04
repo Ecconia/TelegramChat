@@ -20,7 +20,7 @@ public class Message
 	
 	public Message(int chatID, String text)
 	{
-		this(chatID, "Markdown", text);
+		this(chatID, "HTML", text);
 	}
 	
 	public Message(int chatID, String parseMode, String text)

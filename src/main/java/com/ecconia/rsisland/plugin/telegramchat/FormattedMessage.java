@@ -4,6 +4,6 @@ public class FormattedMessage extends Message
 {
 	public FormattedMessage(String content)
 	{
-		super("`" + content + "`");
+		super("<code>" + content + "</code>");
 	}
 }

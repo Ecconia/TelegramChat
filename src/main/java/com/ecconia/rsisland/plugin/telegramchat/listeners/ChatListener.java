@@ -27,7 +27,7 @@ public class ChatListener implements Listener
 			//TODO: Config to enable formatting
 			String content = TelegramPlugin.escape(event.getMessage().replaceAll(ChatColor.COLOR_CHAR + ".", ""));
 			
-			Message message = new Message("*" + playername + "*: " + content);
+			Message message = new Message("<b>" + playername + "</b>: " + content);
 			plugin.sendToAllReceivers(message);
 		}
 	}
