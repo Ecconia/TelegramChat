@@ -3,13 +3,17 @@ package com.ecconia.rsisland.plugin.telegramchat;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -342,7 +346,8 @@ public class TelegramPlugin extends JavaPlugin implements BotEvents
 				telegramBot.sendToChat(new Message(chatID, 
 						escape("Commands:\n"
 						+ "/verify <token> - Verify your account. (Use \"/telegram link\" on the MC-Server to get a token.)\n"
-						+ "/relay <on/off> - turn on/off chat relay.")));
+						+ "/relay <on/off> - turn on/off chat relay.\n"
+						+ "/list - List online players.")));
 			}
 			else if(senderUUID == null)
 			{
@@ -379,6 +384,19 @@ public class TelegramPlugin extends JavaPlugin implements BotEvents
 						{
 							telegramBot.sendToChat(new Message(chatID, "Chat relay is already off."));
 						}
+					}
+				}
+				else if("list".equals(command))
+				{
+					if(parts.length != 1)
+					{
+						telegramBot.sendToChat(new Message(chatID, "Usage: /list"));
+					}
+					else
+					{
+						List<String> onlinePlayers = getServer().getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
+						//Don't trust playernames on any server - escape
+						telegramBot.sendToChat(new Message(chatID, escape("Players online: " + StringUtils.join(onlinePlayers, ", "))));
 					}
 				}
 				else
