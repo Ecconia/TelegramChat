@@ -1,8 +1,8 @@
 package com.ecconia.rsisland.plugin.telegramchat.telegrambot;
 
 import java.util.Set;
-import java.util.logging.Logger;
 
+import com.ecconia.rsisland.plugin.telegramchat.FormattedLogger;
 import com.ecconia.rsisland.plugin.telegramchat.Message;
 import com.ecconia.rsisland.plugin.telegramchat.telegrambot.exceptions.AnswerException;
 import com.ecconia.rsisland.plugin.telegramchat.telegrambot.exceptions.ConnectionException;
@@ -16,7 +16,7 @@ public class TelegramBot implements UpdateHandler
 	private String token;
 	
 	private final BotEvents eventHandler;
-	private final Logger logger;
+	private final FormattedLogger logger;
 	private final StopDebugSpam sds;
 	
 	//#########################################################################
@@ -45,7 +45,7 @@ public class TelegramBot implements UpdateHandler
 	//#########################################################################
 	
 	//TODO: authentification should be threaded!
-	public TelegramBot(BotEvents eventHandler, Logger logger, String token)
+	public TelegramBot(BotEvents eventHandler, FormattedLogger logger, String token)
 	{
 		this.token = token;
 		this.logger = logger;
@@ -60,15 +60,15 @@ public class TelegramBot implements UpdateHandler
 		}
 		catch (AnswerException e)
 		{
-			logger.severe("TelegramAPI refuses Token: " + e.getMessage());
+			logger.error("TelegramAPI refuses Token: " + e.getMessage());
 		}
 		catch (ConnectionException e)
 		{
-			logger.severe("Error connecting to TelegramAPI: " + e.getMessage());
+			logger.error("Error connecting to TelegramAPI: " + e.getMessage());
 		}
 		catch (InvalidTokenException e)
 		{
-			logger.severe("Stored token is invalid please remove it. Token >" + e.getMessage() + "<");
+			logger.error("Stored token is invalid please remove it. Token >" + e.getMessage() + "<");
 		}
 	}
 	
@@ -88,7 +88,7 @@ public class TelegramBot implements UpdateHandler
 	{
 		if(token != null && token.matches("[0-9]+:[A-Za-z0-9]+"))
 		{
-			logger.info("Login attempt with token: >" + token + "<");
+			logger.info("Login attempt with token: >%v<", token);
 			name = TelegramAPI.login(token);
 		}
 		else

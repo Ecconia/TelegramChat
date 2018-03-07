@@ -61,9 +61,12 @@ public class TelegramPlugin extends JavaPlugin implements BotEvents
 		
 		pendingUserTokens = new HashMap<>();
 
+		Feedback f = new Feedback(prefix);
+		FormattedLogger fl = new FormattedLogger(f, getServer().getConsoleSender());
+		
 		try
 		{
-			storage = new DataStorage(new File(getDataFolder(), "data.json"), getLogger());
+			storage = new DataStorage(new File(getDataFolder(), "data.json"), fl);
 		}
 		catch (JsonSyntaxException e)
 		{
@@ -87,14 +90,14 @@ public class TelegramPlugin extends JavaPlugin implements BotEvents
 			return;
 		}
 		
-		new CommandHandler(this, new Feedback(prefix), new GroupSubcommand("telegram"
+		new CommandHandler(this, f, new GroupSubcommand("telegram"
 			,new CommandLink(this)
 			,new CommandReload(this)
 			,new CommandStatus(this)
 			,new CommandToken(this)
 		));
 		
-		telegramBot = new TelegramBot(this, getLogger(), getConfig().getString("token"));
+		telegramBot = new TelegramBot(this, fl, getConfig().getString("token"));
 	}
 
 	@Override

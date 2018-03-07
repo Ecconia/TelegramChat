@@ -1,13 +1,13 @@
 package com.ecconia.rsisland.plugin.telegramchat.telegrambot;
 
-import java.util.logging.Logger;
+import com.ecconia.rsisland.plugin.telegramchat.FormattedLogger;
 
 public class StopDebugSpam
 {
 	private boolean goodState;
-	private final Logger logger;
+	private final FormattedLogger logger;
 	
-	public StopDebugSpam(boolean init, Logger logger)
+	public StopDebugSpam(boolean init, FormattedLogger logger)
 	{
 		goodState = init;
 		this.logger = logger;
@@ -42,7 +42,7 @@ public class StopDebugSpam
 	{
 		if(goodState)
 		{
-			logger.severe(error);
+			logger.error(error);
 		}
 		goodState = false;
 	}

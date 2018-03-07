@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -21,9 +20,9 @@ public class DataStorage
 	private Data data;
 	
 	private final File path; 
-	private final Logger logger;
+	private final FormattedLogger logger;
 	
-	public DataStorage(File path, Logger logger) throws IOException, JsonSyntaxException, ClassNotFoundException
+	public DataStorage(File path, FormattedLogger logger) throws IOException, JsonSyntaxException, ClassNotFoundException
 	{
 		this.path = path;
 		this.logger = logger;
@@ -62,7 +61,7 @@ public class DataStorage
 		catch (IOException e)
 		{
 			//Throw it as often as needed.
-			logger.severe("Could not save data file. (IOException)");
+			logger.error("Could not save data file. (IOException)");
 		}
 	}
 	
