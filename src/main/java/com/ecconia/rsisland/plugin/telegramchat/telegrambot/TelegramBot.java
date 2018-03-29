@@ -7,6 +7,7 @@ import com.ecconia.rsisland.plugin.telegramchat.Message;
 import com.ecconia.rsisland.plugin.telegramchat.telegrambot.exceptions.AnswerException;
 import com.ecconia.rsisland.plugin.telegramchat.telegrambot.exceptions.ConnectionException;
 import com.ecconia.rsisland.plugin.telegramchat.telegrambot.exceptions.InvalidTokenException;
+import com.ecconia.rsisland.plugin.telegramchat.telegrambot.exceptions.MalformedException;
 import com.google.gson.Gson;
 
 //TODO: Switch from polling to webhook
@@ -113,6 +114,9 @@ public class TelegramBot implements UpdateHandler
 		{
 			updating = false;
 			sds.bad("Error connecting to TelegramAPI: " + e.getMessage());
+		catch (MalformedException e)
+		{
+			sds.bad("Error parsing response JSON: " + e.getMessage());
 		}
 	}
 
